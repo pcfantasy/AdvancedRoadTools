@@ -43,7 +43,7 @@ namespace AdvancedRoadTools
             {
                 if (mode == LoadMode.LoadGame || mode == LoadMode.NewGame || mode == LoadMode.NewMap || mode == LoadMode.LoadMap || mode == LoadMode.NewAsset || mode == LoadMode.LoadAsset)
                 {
-                    OptionUI.LoadSetting();
+                    //OptionUI.LoadSetting();
                     SetupGui();
                     SetupTools();
                     //InitDetour();
@@ -101,12 +101,34 @@ namespace AdvancedRoadTools
             //LoadSprites();
             //if (m_atlasLoaded)
             //{
-                SetupButton();
-                isGuiRunning = true;
-            //}
+                parentGuiView = null;
+                parentGuiView = UIView.GetAView();
+
+                SetupThreeRoundButton();
+                SetupOneRoundButton();
+            isGuiRunning = true;
+           //}
         }
 
-        public static void SetupButton()
+        public static void SetupThreeRoundButton()
+        {
+            if (threeRoundButton == null)
+            {
+                threeRoundButton = (parentGuiView.AddUIComponent(typeof(ThreeRoundButton)) as ThreeRoundButton);
+            }
+            //mainButton.Show();
+        }
+
+        public static void SetupOneRoundButton()
+        {
+            if (oneRoundButton == null)
+            {
+                oneRoundButton = (parentGuiView.AddUIComponent(typeof(OneRoundButton)) as OneRoundButton);
+            }
+            //mainButton.Show();
+        }
+
+        /*public static void SetupButton()
         {
             RoadToolsWindowGameObject = new GameObject("RoadToolsWindowGameObject");
             RoadToolsWindowGameObject1 = new GameObject("RoadToolsWindowGameObject1");
@@ -129,12 +151,12 @@ namespace AdvancedRoadTools
             {
                 threeRoundButton.transform.parent = RoadToolsInfo.transform;
                 threeRoundButton.size = new Vector3(30, 30);
-                threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+                threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
                 threeRoundButton.position = new Vector3(-40, RoadToolsInfo.size.y);
 
                 oneRoundButton.transform.parent = RoadToolsInfo.transform;
                 oneRoundButton.size = new Vector3(30, 30);
-                oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+                oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
                 oneRoundButton.position = new Vector3(-75, RoadToolsInfo.size.y);
                 RoadToolsInfo.eventVisibilityChanged += RoadToolsInfo_eventVisibilityChanged;
             }
@@ -165,11 +187,18 @@ namespace AdvancedRoadTools
         private static IEnumerator<object> GetRoadOptionsPanel(UITabstrip tabstrip)
         {
             yield return null;
-            RoadToolsInfo = getRoadsOptionsPanel();
-            if (RoadToolsInfo != null)
+            if (Loader.RoadToolsInfo == null)
+            {
+                RoadToolsInfo = getRoadsOptionsPanel();
+                if (RoadToolsInfo != null)
+                {
+                    tabstrip.eventSelectedIndexChanged -= mainToolStrip_eventSelectedIndexChanged;
+                    onWaitComplete();
+                }
+            }
+            else
             {
                 tabstrip.eventSelectedIndexChanged -= mainToolStrip_eventSelectedIndexChanged;
-                onWaitComplete();
             }
         }
         private static UIPanel getRoadsOptionsPanel()
@@ -181,12 +210,12 @@ namespace AdvancedRoadTools
         {
             threeRoundButton.transform.parent = RoadToolsInfo.transform;
             threeRoundButton.size = new Vector3(30, 30);
-            threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+            threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
             threeRoundButton.position = new Vector3(-40, RoadToolsInfo.size.y);
 
             oneRoundButton.transform.parent = RoadToolsInfo.transform;
             oneRoundButton.size = new Vector3(30, 30);
-            oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+            oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
             oneRoundButton.position = new Vector3(-75, RoadToolsInfo.size.y);
             RoadToolsInfo.eventVisibilityChanged += RoadToolsInfo_eventVisibilityChanged;
         }
@@ -199,12 +228,12 @@ namespace AdvancedRoadTools
                 //initialize again
                 threeRoundButton.transform.parent = RoadToolsInfo.transform;
                 threeRoundButton.size = new Vector3(30, 30);
-                threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+                threeRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
                 threeRoundButton.position = new Vector3(-40, RoadToolsInfo.size.y);
                 threeRoundButton.Show();
                 oneRoundButton.transform.parent = RoadToolsInfo.transform;
                 oneRoundButton.size = new Vector3(30, 30);
-                oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsOptionPanel>();
+                oneRoundButton.baseBuildingWindow = RoadToolsInfo.gameObject.transform.GetComponentInChildren<RoadsPanel>();
                 oneRoundButton.position = new Vector3(-75, RoadToolsInfo.size.y);
                 oneRoundButton.Show();
             }
@@ -213,16 +242,19 @@ namespace AdvancedRoadTools
                 threeRoundButton.Hide();
                 oneRoundButton.Hide();
             }
-        }
+        }*/
 
         public static void RemoveGui()
         {
             isGuiRunning = false;
-            UnityEngine.Object.Destroy(threeRoundButton);
-            UnityEngine.Object.Destroy(oneRoundButton);
-            RoadToolsInfo.eventVisibilityChanged -= RoadToolsInfo_eventVisibilityChanged;
-            threeRoundButton = null;
-            oneRoundButton = null;
+            if (parentGuiView != null)
+            {
+                parentGuiView = null;
+                UnityEngine.Object.Destroy(threeRoundButton);
+                UnityEngine.Object.Destroy(oneRoundButton);
+                threeRoundButton = null;
+                oneRoundButton = null;
+            }
         }
     }
 }

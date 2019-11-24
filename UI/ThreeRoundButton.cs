@@ -6,11 +6,12 @@ namespace AdvancedRoadTools.UI
 {
     public class ThreeRoundButton : UIButton
     {
-        public RoadsOptionPanel baseBuildingWindow;
         public override void Start()
         {
             name = "ThreeRoundButton";
             text = "T";
+            relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 450f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
+            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth - 70f), (Loader.parentGuiView.fixedHeight / 2 + 100f));
             //atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName2);
             //normalBgSprite = "CSUR_BUTTON";
             //hoveredBgSprite = "CSUR_BUTTON_S";
@@ -52,6 +53,28 @@ namespace AdvancedRoadTools.UI
                     AdvancedTools.height = 0;
                 }
             };
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (!isVisible)
+            {
+                ToolBase currentTool = ToolsModifierControl.GetCurrentTool<ToolBase>();
+                if ((currentTool != null) && (currentTool is NetTool))
+                {
+                    DebugLog.LogToFileOnly("try show");
+                    Show();
+                }
+            }
+            else
+            {
+                ToolBase currentTool = ToolsModifierControl.GetCurrentTool<ToolBase>();
+                if (!((currentTool != null) && (currentTool is NetTool)))
+                {
+                    Hide();
+                }
+            }
         }
     }
 }

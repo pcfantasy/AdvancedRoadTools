@@ -17,7 +17,7 @@ namespace AdvancedRoadTools.UI
         {
             // tabbing code is borrowed from RushHour mod
             // https://github.com/PropaneDragon/RushHour/blob/release/RushHour/Options/OptionHandler.cs
-            LoadSetting();
+            //LoadSetting();
             UIHelper actualHelper = helper as UIHelper;
             UIComponent container = actualHelper.self as UIComponent;
 
@@ -51,7 +51,7 @@ namespace AdvancedRoadTools.UI
             panel.gameObject.AddComponent<OptionsKeymappingRoadTool>();
 
             // Function_ShortCut
-            ++tabIndex;
+            /*++tabIndex;
 
             AddOptionTab(tabStrip, "ShortCut");
             tabStrip.selectedIndex = tabIndex;
@@ -70,8 +70,7 @@ namespace AdvancedRoadTools.UI
 
             var generalGroup1 = panelHelper.AddGroup("Beta function") as UIHelper;
             generalGroup1.AddCheckbox("Allow road tools to make road more like a circle(may impact performance)", isMoreRound, (index) => isMoreRoundEnable(index));
-            panel.gameObject.AddComponent<OptionsKeymappingBeta>();
-            SaveSetting();
+            SaveSetting();*/
         }
         private static UIButton AddOptionTab(UITabstrip tabStrip, string caption)
         {
@@ -90,7 +89,7 @@ namespace AdvancedRoadTools.UI
             return tabButton;
         }
 
-        public static void SaveSetting()
+        /*public static void SaveSetting()
         {
             //save langugae
             FileStream fs = File.Create("AdvancedRoadTools_setting.txt");
@@ -124,6 +123,6 @@ namespace AdvancedRoadTools.UI
         {
             isMoreRound = index;
             SaveSetting();
-        }
+        }*/
     }
 }

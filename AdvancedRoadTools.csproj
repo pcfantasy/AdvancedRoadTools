@@ -69,7 +69,11 @@
     <Compile Include="Util\Localization.cs" />
     <Compile Include="Util\RedirectionHelper.cs" />
     <Compile Include="Util\SpriteUtilities.cs" />
-    <Compile Include="UI/*.cs" />
+    <Compile Include="UI\AdvancedTools.cs" />
+    <Compile Include="UI\OneRoundButton.cs" />
+    <Compile Include="UI\OptionsKeymappingRoadTool.cs" />
+    <Compile Include="UI\OptionUI.cs" />
+    <Compile Include="UI\ThreeRoundButton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

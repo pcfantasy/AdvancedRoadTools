@@ -9,6 +9,7 @@ using System.Linq;
 using AdvancedRoadTools.Util;
 using ColossalFramework.Math;
 using AdvancedRoadTools.NewData;
+using Object = UnityEngine.Object;
 
 namespace AdvancedRoadTools.UI
 {
@@ -28,6 +29,7 @@ namespace AdvancedRoadTools.UI
         byte radius;
         public static byte rampMode;
         public static byte height;
+        public static int currentMoney;
 
         //load&restore
         public static Vector3[] storedPos0 = new Vector3[8];
@@ -40,6 +42,8 @@ namespace AdvancedRoadTools.UI
         public static ushort[] storedNode2 = new ushort[8];
         public static NetInfo[] storedNetInfo = new NetInfo[8];
         public static byte storedNum;
+        public static byte hoveredRoundIndex;
+        public static bool updateRoundMode;
 
         public static NetInfo m_netInfo;
 
@@ -80,6 +84,9 @@ namespace AdvancedRoadTools.UI
             storedNode2 = new ushort[8];
             storedNetInfo = new NetInfo[8];
             storedNum = 255;
+            hoveredRoundIndex = 255;
+            updateRoundMode = false;
+            currentMoney = 0;
         }
         protected override void OnToolUpdate()
         {
@@ -97,7 +104,7 @@ namespace AdvancedRoadTools.UI
                 ToolsModifierControl.SetTool<DefaultTool>();
                 m_step = 0;
             }
-
+            //revert
             if (Input.GetMouseButtonUp(1))
             {
                 if (m_step != 0)
@@ -105,92 +112,156 @@ namespace AdvancedRoadTools.UI
                     m_step--;
                 }
             }
-
-            if (m_step != 2)
+            //hoveredRound
+            if (m_step == 0)
             {
-                switch (m_step)
+                if (updateRoundMode)
                 {
-                    case 0:
-                        determineHoveredElements(); pos0 = GetNode(m_hover).m_position; node0 = m_hover; CustomShowToolInfo(true, "Please select start node", output.m_hitPos); break;
-                    case 1:
-                        if (rampMode != 2)
-                        {
-                            pos1 = output.m_hitPos;
-                            CustomShowToolInfo(true, "Please select round centre and adjust radius " + radius.ToString(), output.m_hitPos);
-                        }
-                        else
-                        {
-                            determineHoveredElements();
-                            pos1 = GetNode(m_hover).m_position;
-                            node1 = m_hover;
-                            CustomShowToolInfo(true, "Please select post start node for start direction " + radius.ToString(), output.m_hitPos);
-                        }
-                        break;
-                    default: break;
-                }
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    if (m_step < 2)
+                    storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                    storedElevation[hoveredRoundIndex] = height;
+                    storedRadius[hoveredRoundIndex] = radius;
+                    if (storedRampMode[hoveredRoundIndex] == 2)
                     {
-                        m_step++;
+                        //Build1RoundRoad(false, false, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
                     }
-                }
-            }
-            else
-            {
-                determineHoveredElements();
-                if (m_hover != 0)
-                {
-                    pos2 = GetNode(m_hover).m_position;
-                    node2 = m_hover;
+                    else
+                    {
+                        //Build3RoundRoad(false, false, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
+                    }
+
+                    if (hoveredRoundIndex != 255)
+                    {
+                        if (storedRampMode[hoveredRoundIndex] == 0)
+                        {
+                            if (Input.GetMouseButtonUp(0))
+                            {
+                                storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                                storedElevation[hoveredRoundIndex] = height;
+                                storedRadius[hoveredRoundIndex] = radius;
+                                updateRoundMode = updateRoundMode ? false : true;
+                            }
+                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString(), output.m_hitPos);
+                        }
+                    }
                 }
                 else
                 {
-                    pos2 = Vector3.zero;
-                    node2 = 0;
-                }
-                CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString(), output.m_hitPos);
-                if (Input.GetMouseButtonUp(0))
-                {
-                    if (m_step == 2)
+                    hoveredRoundIndex = 255;
+                    if (storedNum != 255)
                     {
-                        if (rampMode == 0)
+                        for (int i = 0; i <= storedNum; i++)
                         {
-                            if (storedNum != 255)
+                            if (storedRampMode[i] == 0)
                             {
-                                for (int i = 0; i <= storedNum; i++)
+                                if (Vector2.Distance(VectorUtils.XZ(output.m_hitPos), VectorUtils.XZ(storedPos1[i])) < 4f)
                                 {
-                                    if (storedRampMode[i] == 0)
-                                    {
-                                        Build3RoundRoad(false, false, true, (byte)i, (byte)i, null);
-                                    }
+                                    hoveredRoundIndex = (byte)i;
                                 }
                             }
-
-                            Build3RoundRoad(false, false, false, 0, 0, null);
                         }
-                        else if (rampMode == 2)
-                        {
-                            if (storedNum != 255)
-                            {
-                                for (int i = 0; i <= storedNum; i++)
-                                {
-                                    if (storedRampMode[i] == 0)
-                                    {
-                                        Build3RoundRoad(false, false, true, (byte)i, (byte)i, null);
-                                    }
-                                }
-                            }
-
-                            Build1RoundRoad(false, null);
-                        }
-                        storedNum = 255;
-                        m_step = 0;
-                        CustomShowToolInfo(show: false, null, Vector3.zero);
-                        ToolsModifierControl.SetTool<DefaultTool>();
-                        enabled = false;
                     }
+                    if (hoveredRoundIndex != 255)
+                    {
+                        if (storedRampMode[hoveredRoundIndex] == 0)
+                        {
+                            if (Input.GetMouseButtonUp(0))
+                            {
+                                storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                                storedElevation[hoveredRoundIndex] = height;
+                                storedRadius[hoveredRoundIndex] = radius;
+                                if (storedRampMode[hoveredRoundIndex] == 2)
+                                {
+                                    //Build1RoundRoad(false, true, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
+                                }
+                                else
+                                {
+                                    //Build3RoundRoad(false, true, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
+                                }
+                                updateRoundMode = updateRoundMode ? false : true;
+                            }
+                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString(), output.m_hitPos);
+                        }
+                    }
+                }
+            }
+
+            if (hoveredRoundIndex == 255)
+            {
+                if (m_step != 2)
+                {
+                    switch (m_step)
+                    {
+                        case 0:
+                            determineHoveredElements(); pos0 = GetNode(m_hover).m_position; node0 = m_hover; CustomShowToolInfo(true, "Please select start node", output.m_hitPos); break;
+                        case 1:
+                            if (rampMode != 2)
+                            {
+                                pos1 = output.m_hitPos;
+                                CustomShowToolInfo(true, "Please select round centre and adjust radius " + radius.ToString(), output.m_hitPos);
+                            }
+                            else
+                            {
+                                determineHoveredElements();
+                                pos1 = GetNode(m_hover).m_position;
+                                node1 = m_hover;
+                                CustomShowToolInfo(true, "Please select post start node for start direction \n radius = " + radius.ToString(), output.m_hitPos);
+                            }
+                            break;
+                        default: break;
+                    }
+
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        if (m_step < 2)
+                        {
+                            m_step++;
+                        }
+                    }
+                }
+                else
+                {
+                    determineHoveredElements();
+                    if (m_hover != 0)
+                    {
+                        pos2 = GetNode(m_hover).m_position;
+                        node2 = m_hover;
+                        if (Input.GetMouseButtonUp(0))
+                        {
+                            FieldInfo cashAmount;
+                            cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
+                            long _cashAmount = (long)cashAmount.GetValue(Singleton<EconomyManager>.instance);
+
+                            if (_cashAmount < currentMoney)
+                            {
+                                CustomShowExtraInfo(true, "Do not have enough money", pos);
+                            }
+                            else
+                            {
+                                Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
+                                if (rampMode == 0)
+                                {
+                                    Build3RoundRoad(false, false, false, 0, 0, null, out bool _);
+                                }
+                                else
+                                {
+                                    Build1RoundRoad(false, false, false, 0, 0, null, out bool _);
+                                }
+                                storedNum = 255;
+                                m_step = 0;
+                                CustomShowToolInfo(show: false, null, Vector3.zero);
+                                ToolsModifierControl.SetTool<DefaultTool>();
+                                enabled = false;
+                                updateRoundMode = false;
+                                currentMoney = 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        pos2 = Vector3.zero;
+                        node2 = 0;
+                    }
+                    CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + currentMoney.ToString(), output.m_hitPos);
                 }
             }
         }
@@ -203,18 +274,85 @@ namespace AdvancedRoadTools.UI
                 if (OptionsKeymappingRoadTool.m_minus.IsPressed(e)) radius = (byte)COMath.Clamp(radius - 1, 10, 250);
                 if (OptionsKeymappingRoadTool.m_rise.IsPressed(e)) height = (byte)COMath.Clamp(height + 1, 0, 32);
                 if (OptionsKeymappingRoadTool.m_lower.IsPressed(e)) height = (byte)COMath.Clamp(height - 1, 0, 32);
-                if (OptionsKeymappingBeta.m_fix.IsPressed(e))
+                if (OptionsKeymappingRoadTool.m_laterBuild.IsPressed(e))
                 {
-                    if ((storedNum < 8) || (storedNum == 255))
+                    if (!updateRoundMode)
                     {
-                        if (storedNum == 255) storedNum = 0;
-                        else storedNum++;
-                        Build3RoundRoad(false, true, false, storedNum, storedNum, null);
+                        if ((storedNum < 8) || (storedNum == 255))
+                        {
+                            if (storedNum == 255) storedNum = 0;
+                            else storedNum++;
+                            DebugLog.LogToFileOnly("storedNum = " + storedNum.ToString());
+                            bool isUpdated = false;
+                            if (rampMode == 0)
+                            {
+                                Build3RoundRoad(false, true, false, storedNum, storedNum, null, out isUpdated);
+                            }
+                            else if (rampMode == 2)
+                            {
+                                Build1RoundRoad(false, true, false, storedNum, storedNum, null, out isUpdated);
+                            }
+                            if (isUpdated)
+                            {
+                                storedNum--;
+                            }
+                        }
+                        m_step = 0;
+                        CustomShowToolInfo(show: false, null, Vector3.zero);
+                        currentMoney = 0;
                     }
+                    //ToolsModifierControl.SetTool<DefaultTool>();
+                    //enabled = false;
+                }
+
+                if (OptionsKeymappingRoadTool.m_build.IsPressed(e))
+                {
+                    if (!updateRoundMode)
+                    {
+                        FieldInfo cashAmount;
+                        cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
+                        long _cashAmount = (long)cashAmount.GetValue(Singleton<EconomyManager>.instance);
+
+                        if (_cashAmount < currentMoney)
+                        {
+                            CustomShowExtraInfo(true, "Do not have enough money", pos);
+                        }
+                        else
+                        {
+                            Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
+                            if (storedNum != 255)
+                            {
+                                for (int i = 0; i <= storedNum; i++)
+                                {
+                                    if (storedRampMode[i] == 0)
+                                    {
+                                        Build3RoundRoad(false, false, true, (byte)i, (byte)i, null, out bool _);
+                                    }
+                                    else if (storedRampMode[i] == 2)
+                                    {
+                                        Build1RoundRoad(false, false, true, (byte)i, (byte)i, null, out bool _);
+                                    }
+                                }
+                            }
+                            storedNum = 255;
+                            m_step = 0;
+                            CustomShowToolInfo(show: false, null, Vector3.zero);
+                            ToolsModifierControl.SetTool<DefaultTool>();
+                            enabled = false;
+                            updateRoundMode = false;
+                            currentMoney = 0;
+                        }
+                    }
+                }
+
+                if (OptionsKeymappingRoadTool.m_clear.IsPressed(e))
+                {
+                    storedNum = 255;
                     m_step = 0;
                     CustomShowToolInfo(show: false, null, Vector3.zero);
                     ToolsModifierControl.SetTool<DefaultTool>();
                     enabled = false;
+                    updateRoundMode = false;
                 }
             }
         }
@@ -323,6 +461,7 @@ namespace AdvancedRoadTools.UI
         {
             if (enabled == true)
             {
+                currentMoney = 0;
                 if (m_hover != 0 && (m_step != 2))
                 {
                     ushort netNode = m_hover;
@@ -336,13 +475,17 @@ namespace AdvancedRoadTools.UI
                     Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, position, Mathf.Max(6f, info.m_halfWidth * 2f), -1f, 1280f, renderLimits: false, alphaBlend: true);
                 }
 
-                if (storedNum!=255)
+                if (storedNum != 255)
                 {
-                    for (int i =0; i <= storedNum; i++ )
+                    for (int i = 0; i <= storedNum; i++)
                     {
                         if (storedRampMode[i] == 0)
                         {
-                            Build3RoundRoad(true, false, true, (byte)i, (byte)i, cameraInfo);
+                            Build3RoundRoad(true, false, true, (byte)i, (byte)i, cameraInfo, out bool _);
+                        }
+                        else if (rampMode == 2)
+                        {
+                            Build1RoundRoad(true, false, true, (byte)i, (byte)i, cameraInfo, out bool _);
                         }
                     }
                 }
@@ -351,16 +494,31 @@ namespace AdvancedRoadTools.UI
                 {
                     if (rampMode == 0)
                     {
-                        Build3RoundRoad(true, false, false, 0, 0, cameraInfo);
+                        Build3RoundRoad(true, false, false, 0, 0, cameraInfo, out bool _);
                     }
                     else if (rampMode == 2)
                     {
-                        Build1RoundRoad(true, cameraInfo);
+                        Build1RoundRoad(true, false, false, 0, 0, cameraInfo, out bool _);
                     }
                     //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugA1pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
                     //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugA2pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
                     //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugB1pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
                     //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugB2pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
+                }
+
+                if (storedNum != 255)
+                {
+                    for (int i = 0; i <= storedNum; i++)
+                    {
+                        if (hoveredRoundIndex == (byte)i)
+                        {
+                            Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(10, 70, 0, 90), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                        }
+                        else
+                        {
+                            Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(45, 126, 0, 214), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                        }
+                    }
                 }
             }
         }
@@ -526,7 +684,7 @@ namespace AdvancedRoadTools.UI
             for (int i = 0; i < 255; i++)
             {
                 float p = (float)i / (float)(255);
-                if (Vector2.Distance(VectorUtils.XZ(pos), VectorUtils.XZ(part.Position(p))) < 2f)
+                if (Vector2.Distance(VectorUtils.XZ(pos), VectorUtils.XZ(part.Position(p))) < 4f)
                 {
                     return true;
                 }
@@ -534,7 +692,7 @@ namespace AdvancedRoadTools.UI
             return false;
         }
 
-        public void Build3RoundRoad(bool onlyShow, bool store, bool load, byte storeIndex, byte loadIndex, RenderManager.CameraInfo cameraInfo)
+        public void Build3RoundRoad(bool onlyShow, bool store, bool load, byte storeIndex, byte loadIndex, RenderManager.CameraInfo cameraInfo, out bool isUpdate)
         {
             Bezier3 partA = default(Bezier3);
             Bezier3 partB = default(Bezier3);
@@ -549,6 +707,7 @@ namespace AdvancedRoadTools.UI
             ushort m_node0 = node0;
             ushort m_node2 = node2;
             NetInfo m_loacalNetInfo = m_netInfo;
+            isUpdate = false;
 
             if (load)
             {
@@ -570,30 +729,6 @@ namespace AdvancedRoadTools.UI
                 m_node0 = storedNode0[loadIndex];
                 m_node2 = storedNode2[loadIndex];
                 m_loacalNetInfo = storedNetInfo[loadIndex];
-            }
-
-            if (store)
-            {
-                if (storeIndex >= 8)
-                {
-                    return;
-                }
-                storedRampMode[storeIndex] = rampMode;
-
-                if (rampMode == 2)
-                {
-                    return;
-                }
-
-                storedPos0[storeIndex] = m_pos0;
-                storedPos1[storeIndex] = m_pos1;
-                storedPos2[storeIndex] = m_pos2;
-                storedElevation[storeIndex] = m_elevation;
-                storedRadius[storeIndex] = m_radius;
-                storedNode0[storeIndex] = m_node0;
-                storedNode2[storeIndex] = m_node2;
-                storedNetInfo[storeIndex] = m_loacalNetInfo;
-                return;
             }
 
             var rand = new Randomizer(0u);
@@ -640,63 +775,109 @@ namespace AdvancedRoadTools.UI
                 CustomNetSegment.CalculateMiddlePoints(NodeA2, VectorUtils.NormalizeXZ(NodeA2Dir), m_pos2, -endDir, true, true, out partE.b, out partE.c);
             }
 
-            if (!onlyShow)
+
+            if (NodeA1 == Vector3.zero)
             {
-                if (NodeA1 == Vector3.zero)
+                DebugLog.LogToFileOnly("NodeA1 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeB1 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeB1 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeB2 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeB2 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeA2 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeA2 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            
+            CustomShowExtraInfo(false, null, Vector3.zero);
+
+            if (store)
+            {
+                if (rampMode == 2)
                 {
-                    DebugLog.LogToFileOnly("NodeA1 not found"); return;
-                }
-                if (NodeB1 == Vector3.zero)
-                {
-                    DebugLog.LogToFileOnly("NodeB1 not found");
                     return;
                 }
-                if (NodeB2 == Vector3.zero)
+
+                for (int i = 0; i < storeIndex; i++)
                 {
-                    DebugLog.LogToFileOnly("NodeB2 not found"); 
+                    if ((storedPos0[i] == m_pos0) && (storedPos2[i] == m_pos2) && (storedNode0[i] == m_node0) && (storedNode2[i] == m_node2))
+                    {
+                        isUpdate = true;
+                        storeIndex = (byte)i;
+                    }
+                }
+
+                if (storeIndex >= 8)
+                {
                     return;
                 }
-                if (NodeA2 == Vector3.zero)
+                storedRampMode[storeIndex] = rampMode;
+
+                storedPos0[storeIndex] = m_pos0;
+                storedPos1[storeIndex] = m_pos1;
+                storedPos2[storeIndex] = m_pos2;
+                storedElevation[storeIndex] = m_elevation;
+                storedRadius[storeIndex] = m_radius;
+                storedNode0[storeIndex] = m_node0;
+                storedNode2[storeIndex] = m_node2;
+                storedNetInfo[storeIndex] = m_loacalNetInfo;
+                return;
+            }
+
+            DebugLog.LogToFileOnly(m_pos0.ToString());
+            DebugLog.LogToFileOnly(m_pos1.ToString());
+            DebugLog.LogToFileOnly(m_pos2.ToString());
+
+            DebugLog.LogToFileOnly(NodeA1.ToString());
+            DebugLog.LogToFileOnly(NodeB1.ToString());
+            DebugLog.LogToFileOnly(NodeB2.ToString());
+            DebugLog.LogToFileOnly(NodeA2.ToString());
+
+            DebugLog.LogToFileOnly(NodeA1Dir.ToString());
+            DebugLog.LogToFileOnly(NodeB1Dir.ToString());
+            DebugLog.LogToFileOnly(NodeB2Dir.ToString());
+            DebugLog.LogToFileOnly(NodeA2Dir.ToString());
+
+            int m_nodeNum = 0;
+            int partANum = (int)(Vector2.Distance(VectorUtils.XZ(m_pos0), VectorUtils.XZ(NodeA1)) / 64f);
+            int partBNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA1), VectorUtils.XZ(NodeB1)) / 64f);
+            int partCNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB1), VectorUtils.XZ(NodeB2)) / 64f);
+            int partDNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB2), VectorUtils.XZ(NodeA2)) / 64f);
+            int partENum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA2), VectorUtils.XZ(m_pos2)) / 64f);
+
+            m_nodeNum += partANum + 1;
+            m_nodeNum += partBNum + 1;
+            if (!rightTurn)
+            {
+                m_nodeNum += partCNum + 1;
+                m_nodeNum += partDNum + 1;
+            }
+            m_nodeNum += partENum;
+            ushort[] node = new ushort[m_nodeNum];
+            ushort[] segment = new ushort[m_nodeNum];
+
+            for (int i = 0; i <= partANum; i++)
+            {
+                float p1 = (float)(i + 1) / (float)(partANum + 1);
+                float p2 = (float)(i) / (float)(partANum + 1);
+                if (!onlyShow)
                 {
-                    DebugLog.LogToFileOnly("NodeA2 not found");
-                    return;
-                }
-                DebugLog.LogToFileOnly(m_pos0.ToString());
-                DebugLog.LogToFileOnly(m_pos1.ToString());
-                DebugLog.LogToFileOnly(m_pos2.ToString());
-
-                DebugLog.LogToFileOnly(NodeA1.ToString());
-                DebugLog.LogToFileOnly(NodeB1.ToString());
-                DebugLog.LogToFileOnly(NodeB2.ToString());
-                DebugLog.LogToFileOnly(NodeA2.ToString());
-
-                DebugLog.LogToFileOnly(NodeA1Dir.ToString());
-                DebugLog.LogToFileOnly(NodeB1Dir.ToString());
-                DebugLog.LogToFileOnly(NodeB2Dir.ToString());
-                DebugLog.LogToFileOnly(NodeA2Dir.ToString());
-
-                int m_nodeNum = 0;
-                int partANum = (int)(Vector2.Distance(VectorUtils.XZ(m_pos0), VectorUtils.XZ(NodeA1)) / 64f);
-                int partBNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA1), VectorUtils.XZ(NodeB1)) / 64f);
-                int partCNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB1), VectorUtils.XZ(NodeB2)) / 64f);
-                int partDNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB2), VectorUtils.XZ(NodeA2)) / 64f);
-                int partENum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA2), VectorUtils.XZ(m_pos2)) / 64f);
-
-                m_nodeNum += partANum + 1;
-                m_nodeNum += partBNum + 1;
-                if (!rightTurn)
-                {
-                    m_nodeNum += partCNum + 1;
-                    m_nodeNum += partDNum + 1;
-                }
-                m_nodeNum += partENum;
-                ushort[] node = new ushort[m_nodeNum];
-                ushort[] segment = new ushort[m_nodeNum];
-
-                for (int i = 0; i <= partANum; i++)
-                {
-                    float p1 = (float)(i + 1) / (float)(partANum + 1);
-                    float p2 = (float)(i) / (float)(partANum + 1);
                     CreateNode(out node[i], ref rand, netInfo, partA.Position(p1));
                     AdjustElevation(node[i], m_elevation);
                     if (i == 0)
@@ -710,89 +891,149 @@ namespace AdvancedRoadTools.UI
                             Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                 }
-
-                for (int i = 0; i <= partBNum; i++)
+                else
                 {
-                    float p1 = (float)(i + 1) / (float)(partBNum + 1);
-                    float p2 = (float)i / (float)(partBNum + 1);
+                    if (i == 0)
+                    {
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(m_pos0, partA.Position(p1), Singleton<NetManager>.instance.m_nodes.m_buffer[m_node0].m_elevation, m_elevation);
+                    }
+                    else
+                    {
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(partA.Position(p2), partA.Position(p1), m_elevation, m_elevation);
+                    }
+                }
+            }
+
+            for (int i = 0; i <= partBNum; i++)
+            {
+                float p1 = (float)(i + 1) / (float)(partBNum + 1);
+                float p2 = (float)i / (float)(partBNum + 1);
+                if (!onlyShow)
+                {
                     CreateNode(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
                     AdjustElevation(node[i + partANum + 1], m_elevation);
                     if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], VectorUtils.NormalizeXZ(partB.Tangent(p2)), -VectorUtils.NormalizeXZ(partB.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
-
-                if (!rightTurn)
+                else
                 {
-                    for (int i = 0; i <= partCNum; i++)
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partB.Position(p2), partB.Position(p1), m_elevation, m_elevation);
+                }
+            }
+
+            if (!rightTurn)
+            {
+                for (int i = 0; i <= partCNum; i++)
+                {
+                    float p1 = (float)(i + 1) / (float)(partCNum + 1);
+                    float p2 = (float)(i) / (float)(partCNum + 1);
+                    if (!onlyShow)
                     {
-                        float p1 = (float)(i + 1) / (float)(partCNum + 1);
-                        float p2 = (float)(i) / (float)(partCNum + 1);
                         CreateNode(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
                         AdjustElevation(node[i + partANum + partBNum + 2], m_elevation);
                         if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + 2], ref rand, netInfo, node[i + partANum + partBNum + 1], node[i + partANum + partBNum + 2], VectorUtils.NormalizeXZ(partC.Tangent(p2)), -VectorUtils.NormalizeXZ(partC.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                             Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
-
-
-                    for (int i = 0; i <= partDNum; i++)
+                    else
                     {
-                        float p1 = (float)(i + 1) / (float)(partDNum + 1);
-                        float p2 = (float)(i) / (float)(partDNum + 1);
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(partC.Position(p2), partC.Position(p1), m_elevation, m_elevation);
+                    }
+                }
+
+
+                for (int i = 0; i <= partDNum; i++)
+                {
+                    float p1 = (float)(i + 1) / (float)(partDNum + 1);
+                    float p2 = (float)(i) / (float)(partDNum + 1);
+                    if (!onlyShow)
+                    {
                         CreateNode(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
                         AdjustElevation(node[i + partANum + partBNum + partCNum + 3], m_elevation);
                         if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + 2], node[i + partANum + partBNum + partCNum + 3], VectorUtils.NormalizeXZ(partD.Tangent(p2)), -VectorUtils.NormalizeXZ(partD.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                             Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
-
-                    if (partENum > 0)
+                    else
                     {
-                        for (int i = 1; i <= partENum; i++)
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(partD.Position(p2), partD.Position(p1), m_elevation, m_elevation);
+                    }
+                }
+
+                if (partENum > 0)
+                {
+                    for (int i = 1; i <= partENum; i++)
+                    {
+                        float p1 = (float)i / (float)(partENum + 1);
+                        float p2 = (float)(i - 1) / (float)(partENum + 1);
+                        if (!onlyShow)
                         {
-                            float p1 = (float)i / (float)(partENum + 1);
-                            float p2 = (float)(i - 1) / (float)(partENum + 1);
                             CreateNode(out node[i + partANum + partBNum + partCNum + partDNum + 3], ref rand, netInfo, partE.Position(p1));
                             AdjustElevation(node[i + partANum + partBNum + partCNum + partDNum + 3], m_elevation);
                             if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + partDNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + partDNum + 2], node[i + partANum + partBNum + partCNum + partDNum + 3], VectorUtils.NormalizeXZ(partE.Tangent(p2)), -VectorUtils.NormalizeXZ(partE.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position(p2), partE.Position(p1), m_elevation, m_elevation);
+                        }
                     }
+                }
 
+                if (!onlyShow)
+                {
                     ushort segmentId;
                     float tmp = (float)partENum / (float)(partENum + 1);
-                    if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partBNum + partCNum + partDNum + partENum + 3], node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -endDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partBNum + partCNum + partDNum + partENum + 3], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -endDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
                 else
                 {
-                    if (partENum > 0)
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+                }
+            }
+            else
+            {
+                if (partENum > 0)
+                {
+                    for (int i = 1; i <= partENum; i++)
                     {
-                        for (int i = 1; i <= partENum; i++)
+                        float p1 = (float)i / (float)(partENum + 1);
+                        float p2 = (float)(i - 1) / (float)(partENum + 1);
+                        if (!onlyShow)
                         {
-                            float p1 = (float)i / (float)(partENum + 1);
-                            float p2 = (float)(i - 1) / (float)(partENum + 1);
                             CreateNode(out node[i + partANum + partBNum + 1], ref rand, netInfo, partE.Position(p1));
                             AdjustElevation(node[i + partANum + partBNum + 1], m_elevation);
                             if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + 1], ref rand, netInfo, node[i + partANum + partBNum], node[i + partANum + partBNum + 1], VectorUtils.NormalizeXZ(partE.Tangent(p2)), -VectorUtils.NormalizeXZ(partE.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position(p2), partE.Position(p1), m_elevation, m_elevation);
+                        }
                     }
+                }
 
+                if (!onlyShow)
+                {
                     ushort segmentId;
                     float tmp = (float)partENum / (float)(partENum + 1);
                     if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partBNum + partENum + 1], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -endDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
+                else
+                {
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+                }
             }
-            else
+            if (onlyShow)
             {
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 if (!rightTurn)
                 {
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 }
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
             }
         }
 
@@ -1189,15 +1430,53 @@ namespace AdvancedRoadTools.UI
             }
         }
 
+        protected void CustomShowExtraInfo(bool show, string text, Vector3 worldPos)
+        {
+            if (!((Object)extraInfoLabel == (Object)null))
+            {
+                if (show)
+                {
+                    UIView uIView = extraInfoLabel.GetUIView();
+                    Vector3 a = Camera.main.WorldToScreenPoint(worldPos);
+                    a /= uIView.inputScale;
+                    Vector3 relativePosition = uIView.ScreenPointToGUI(a) - extraInfoLabel.size * 0.5f;
+                    extraInfoLabel.isVisible = true;
+                    extraInfoLabel.textColor = GetToolColor(false, false);
+                    if (text != null)
+                    {
+                        extraInfoLabel.text = text;
+                    }
+                    extraInfoLabel.relativePosition = relativePosition;
+                }
+                else
+                {
+                    extraInfoLabel.isVisible = false;
+                }
+            }
+        }
+
         public void FindRound(Vector3 pos1, Vector3 pos2, Vector3 pos3, Vector3 endir, float radius, out Vector3 startPos1, out Vector3 startDir1, out Vector3 startPos2, out Vector3 startDir2, out Vector3 endPos1, out Vector3 endDir1, out Vector3 endPos2, out Vector3 endDir2, out Vector3 endirFix)
         {
             var dir1 = VectorUtils.NormalizeXZ(pos2 - pos1);
-            var dir2 = endir;
-            endirFix = endir;
+            var dir2 = VectorUtils.NormalizeXZ(endir);
+            endirFix = VectorUtils.NormalizeXZ(endir);
             Vector3 dir3 = new Vector3(dir1.z, 0, -dir1.x);
             Vector3 dir4 = new Vector3(-dir2.z, 0, dir2.x);
+
+            /*if (radius == 12f)
+            {
+                DebugLog.LogToFileOnly("debug,,,,,,,");
+                DebugLog.LogToFileOnly(pos1.ToString());
+                DebugLog.LogToFileOnly(pos2.ToString());
+                DebugLog.LogToFileOnly(pos3.ToString());
+                DebugLog.LogToFileOnly(endir.ToString());
+                DebugLog.LogToFileOnly(dir1.ToString());
+                DebugLog.LogToFileOnly(dir2.ToString());
+                DebugLog.LogToFileOnly(dir3.ToString());
+                DebugLog.LogToFileOnly(dir4.ToString());
+            }*/
+
             var tmpDistance = 100f;
-            var tmpDistance1 = 100f;
             startPos1 = Vector3.zero;
             startDir1 = Vector3.zero;
             startPos2 = Vector3.zero;
@@ -1209,9 +1488,9 @@ namespace AdvancedRoadTools.UI
             var tmpStartPos1 = Vector3.zero;
             var tmpEndPos2 = Vector3.zero;
             //return (startPos + point * 2 * dir);
-            for (int i = 0; i < 255; i++)
+            for (int i = 0; i < 1000; i++)
             {
-                var point = pos1 + 2 * i * dir1;
+                var point = pos1 + i * dir1;
                 var point1 = point + (8 * radius * dir3) + (8 * radius * dir4);
                 var tmpDir = VectorUtils.NormalizeXZ(pos3 - point1);
                 var distance = Vector3.Distance(tmpDir, dir2);
@@ -1226,14 +1505,26 @@ namespace AdvancedRoadTools.UI
                 }
             }
 
-            dir2 = -endir;
-            tmpDistance1 = tmpDistance;
+            if (tmpDistance != 100f)
+            {
+                startPos1 = tmpStartPos1;
+                startDir1 = dir1;
+                endPos2 = tmpEndPos2;
+                endDir2 = dir2;
+                startPos2 = (16 * radius * -dir4) + endPos2;
+                startDir2 = -dir2;
+                endPos1 = (16 * radius * dir3) + startPos1; ;
+                endDir1 = -dir1;
+            }
+
+            dir2 = -VectorUtils.NormalizeXZ(endir);
+            float tmpDistance1 = tmpDistance;
             dir3 = new Vector3(dir1.z, 0, -dir1.x);
             dir4 = new Vector3(-dir2.z, 0, dir2.x);
 
-            for (int i = 0; i < 255; i++)
+            for (int i = 0; i < 1000; i++)
             {
-                var point = pos1 + 2 * i * dir1;
+                var point = pos1 + i * dir1;
                 var point1 = point + (8 * radius * dir3) + (8 * radius * dir4);
                 var tmpDir = VectorUtils.NormalizeXZ(pos3 - point1);
                 var distance = Vector3.Distance(tmpDir, dir2);
@@ -1258,22 +1549,60 @@ namespace AdvancedRoadTools.UI
                 startDir2 = -dir2;
                 endPos1 = (16 * radius * dir3) + startPos1; ;
                 endDir1 = -dir1;
-                endirFix = -endir;
+                endirFix = -VectorUtils.NormalizeXZ(endir);
             }
         }
 
-        public void Build1RoundRoad(bool onlyShow, RenderManager.CameraInfo cameraInfo)
+        public void Build1RoundRoad(bool onlyShow, bool store, bool load, byte storeIndex, byte loadIndex, RenderManager.CameraInfo cameraInfo, out bool isUpdate)
         {
             Bezier3 partA = default(Bezier3);
             Bezier3 partB = default(Bezier3);
             Bezier3 partC = default(Bezier3);
             Bezier3 partD = default(Bezier3);
             Bezier3 partE = default(Bezier3);
-            var m_elevation = height;
-            FindRound(pos0, pos1, pos2, GetNodeDir(node2), radius, out Vector3 NodeA1, out Vector3 NodeA1Dir, out Vector3 NodeB1, out Vector3 NodeB1Dir, out Vector3 NodeB2, out Vector3 NodeB2Dir, out Vector3 NodeA2, out Vector3 NodeA2Dir, out Vector3 endirFix);
-            partA.a = pos1;
+            isUpdate = false;
+            Vector3 m_pos0 = pos0;
+            Vector3 m_pos1 = pos1;
+            Vector3 m_pos2 = pos2;
+            byte m_elevation = height;
+            byte m_radius = radius;
+            ushort m_node1 = node1;
+            ushort m_node2 = node2;
+            NetInfo m_loacalNetInfo = m_netInfo;
+            isUpdate = false;
+
+            if (load)
+            {
+                if (loadIndex >= 8)
+                {
+                    return;
+                }
+
+                if (storedRampMode[loadIndex] == 0)
+                {
+                    return;
+                }
+
+                m_pos0 = storedPos0[loadIndex];
+                m_pos1 = storedPos1[loadIndex];
+                m_pos2 = storedPos2[loadIndex];
+                m_elevation = storedElevation[loadIndex];
+                m_radius = storedRadius[loadIndex];
+                m_node1 = storedNode0[loadIndex];
+                m_node2 = storedNode2[loadIndex];
+                m_loacalNetInfo = storedNetInfo[loadIndex];
+            }
+
+            var rand = new Randomizer(0u);
+            //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
+            //DebugLog.LogToFileOnly(m_netInfo.name);
+            var m_prefab = m_loacalNetInfo;
+            ToolErrors errors = default(ToolErrors);
+            var netInfo = m_prefab.m_netAI.GetInfo(m_elevation, m_elevation, 5, false, false, false, false, ref errors);
+            FindRound(m_pos0, m_pos1, m_pos2, GetNodeDir(m_node2), m_radius, out Vector3 NodeA1, out Vector3 NodeA1Dir, out Vector3 NodeB1, out Vector3 NodeB1Dir, out Vector3 NodeB2, out Vector3 NodeB2Dir, out Vector3 NodeA2, out Vector3 NodeA2Dir, out Vector3 endirFix);
+            partA.a = m_pos1;
             partA.d = NodeA1;
-            CustomNetSegment.CalculateMiddlePoints(pos1, VectorUtils.NormalizeXZ(pos1 - pos0), NodeA1, -VectorUtils.NormalizeXZ(NodeA1Dir), true, true, out partA.b, out partA.c);
+            CustomNetSegment.CalculateMiddlePoints(m_pos1, VectorUtils.NormalizeXZ(m_pos1 - m_pos0), NodeA1, -VectorUtils.NormalizeXZ(NodeA1Dir), true, true, out partA.b, out partA.c);
             partB.a = NodeA1;
             partB.d = NodeB1;
             CustomNetSegment.CalculateMiddlePoints(NodeA1, VectorUtils.NormalizeXZ(NodeA1Dir), NodeB1, -VectorUtils.NormalizeXZ(NodeB1Dir), true, true, out partB.b, out partB.c);
@@ -1284,69 +1613,127 @@ namespace AdvancedRoadTools.UI
             partD.d = NodeA2;
             CustomNetSegment.CalculateMiddlePoints(NodeB2, VectorUtils.NormalizeXZ(NodeB2Dir), NodeA2, -VectorUtils.NormalizeXZ(NodeA2Dir), true, true, out partD.b, out partD.c);
             partE.a = NodeA2;
-            partE.d = pos2;
-            CustomNetSegment.CalculateMiddlePoints(NodeA2, VectorUtils.NormalizeXZ(NodeA2Dir), pos2, -endirFix, true, true, out partE.b, out partE.c);
+            partE.d = m_pos2;
+            CustomNetSegment.CalculateMiddlePoints(NodeA2, VectorUtils.NormalizeXZ(NodeA2Dir), m_pos2, -endirFix, true, true, out partE.b, out partE.c);
 
-            if (!onlyShow)
+
+            if (NodeA1 == Vector3.zero)
             {
-                if (NodeA1 == Vector3.zero) DebugLog.LogToFileOnly("NodeA1 not found");
-                if (NodeB1 == Vector3.zero) DebugLog.LogToFileOnly("NodeB1 not found");
-                if (NodeB2 == Vector3.zero) DebugLog.LogToFileOnly("NodeB2 not found");
-                if (NodeA2 == Vector3.zero) DebugLog.LogToFileOnly("NodeA2 not found");
-                DebugLog.LogToFileOnly(pos0.ToString());
-                DebugLog.LogToFileOnly(pos1.ToString());
-                DebugLog.LogToFileOnly(pos2.ToString());
+                DebugLog.LogToFileOnly("NodeA1 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeB1 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeB1 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeB2 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeB2 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            if (NodeA2 == Vector3.zero)
+            {
+                DebugLog.LogToFileOnly("NodeA2 not found");
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
 
-                DebugLog.LogToFileOnly(NodeA1.ToString());
-                DebugLog.LogToFileOnly(NodeB1.ToString());
-                DebugLog.LogToFileOnly(NodeB2.ToString());
-                DebugLog.LogToFileOnly(NodeA2.ToString());
+            DebugLog.LogToFileOnly(m_pos0.ToString());
+            DebugLog.LogToFileOnly(m_pos1.ToString());
+            DebugLog.LogToFileOnly(m_pos2.ToString());
 
-                DebugLog.LogToFileOnly(NodeA1Dir.ToString());
-                DebugLog.LogToFileOnly(NodeB1Dir.ToString());
-                DebugLog.LogToFileOnly(NodeB2Dir.ToString());
-                DebugLog.LogToFileOnly(NodeA2Dir.ToString());
+            DebugLog.LogToFileOnly(NodeA1.ToString());
+            DebugLog.LogToFileOnly(NodeB1.ToString());
+            DebugLog.LogToFileOnly(NodeB2.ToString());
+            DebugLog.LogToFileOnly(NodeA2.ToString());
 
-                var rand = new Randomizer(0u);
-                //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
-                DebugLog.LogToFileOnly(m_netInfo.name);
-                var m_prefab = m_netInfo;
-                ToolErrors errors = default(ToolErrors);
-                var netInfo = m_prefab.m_netAI.GetInfo(m_elevation, m_elevation, 5, false, false, false, false, ref errors);
+            DebugLog.LogToFileOnly(NodeA1Dir.ToString());
+            DebugLog.LogToFileOnly(NodeB1Dir.ToString());
+            DebugLog.LogToFileOnly(NodeB2Dir.ToString());
+            DebugLog.LogToFileOnly(NodeA2Dir.ToString());
 
-                int m_nodeNum = 0;
-                int partANum = 0;
-                if (Vector2.Distance(VectorUtils.XZ(pos1 - pos0), VectorUtils.XZ(NodeA1 - pos1)) == 0)
+            int m_nodeNum = 0;
+            int partANum;
+            if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.1f)
+            {
+                partANum = (int)(Vector2.Distance(VectorUtils.XZ(m_pos1), VectorUtils.XZ(NodeA1)) / 64f);
+            }
+            else
+            {
+                //partANum = -1;
+                CustomShowExtraInfo(true, "Invalid shape", pos);
+                isUpdate = true;
+                return;
+            }
+            int partBNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA1), VectorUtils.XZ(NodeB1)) / 64f);
+            int partCNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB1), VectorUtils.XZ(NodeB2)) / 64f);
+            int partDNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB2), VectorUtils.XZ(NodeA2)) / 64f);
+            int partENum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA2), VectorUtils.XZ(m_pos2)) / 64f);
+
+            m_nodeNum += partANum + 1;
+            m_nodeNum += partBNum + 1;
+            m_nodeNum += partCNum + 1;
+            m_nodeNum += partDNum + 1;
+            m_nodeNum += partENum;
+            ushort[] node = new ushort[m_nodeNum];
+            ushort[] segment = new ushort[m_nodeNum];
+
+            CustomShowExtraInfo(false, null, Vector3.zero);
+
+            if (store)
+            {
+                if (rampMode == 0)
                 {
-                    partANum = (int)(Vector2.Distance(VectorUtils.XZ(pos1), VectorUtils.XZ(NodeA1)) / 64f);
+                    return;
                 }
-                else
-                {
-                    partANum = -1;
-                }
-                int partBNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA1), VectorUtils.XZ(NodeB1)) / 64f);
-                int partCNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB1), VectorUtils.XZ(NodeB2)) / 64f);
-                int partDNum = (int)(Vector2.Distance(VectorUtils.XZ(NodeB2), VectorUtils.XZ(NodeA2)) / 64f);
-                int partENum = (int)(Vector2.Distance(VectorUtils.XZ(NodeA2), VectorUtils.XZ(pos2)) / 64f);
 
-                m_nodeNum += partANum + 1;
-                m_nodeNum += partBNum + 1;
-                m_nodeNum += partCNum + 1;
-                m_nodeNum += partDNum + 1;
-                m_nodeNum += partENum;
-                ushort[] node = new ushort[m_nodeNum];
-                ushort[] segment = new ushort[m_nodeNum];
-
-                if (partANum >= 0)
+                for (int i = 0; i < storeIndex; i++)
                 {
-                    for (int i = 0; i <= partANum; i++)
+                    if ((storedPos1[i] == m_pos1) && (storedPos2[i] == m_pos2) && (storedNode0[i] == m_node1) && (storedNode2[i] == m_node2))
                     {
-                        float p1 = (float)(i + 1) / (float)(partANum + 1);
-                        float p2 = (float)(i) / (float)(partANum + 1);
+                        isUpdate = true;
+                        storeIndex = (byte)i;
+                    }
+                }
+
+                if (storeIndex >= 8)
+                {
+                    return;
+                }
+                storedRampMode[storeIndex] = rampMode;
+
+                storedPos0[storeIndex] = m_pos0;
+                storedPos1[storeIndex] = m_pos1;
+                storedPos2[storeIndex] = m_pos2;
+                storedElevation[storeIndex] = m_elevation;
+                storedRadius[storeIndex] = m_radius;
+                storedNode0[storeIndex] = m_node1;
+                storedNode2[storeIndex] = m_node2;
+                storedNetInfo[storeIndex] = m_loacalNetInfo;
+                return;
+            }
+
+            if (partANum >= 0)
+            {
+                for (int i = 0; i <= partANum; i++)
+                {
+                    float p1 = (float)(i + 1) / (float)(partANum + 1);
+                    float p2 = (float)(i) / (float)(partANum + 1);
+                    if (!onlyShow)
+                    {
                         CreateNode(out node[i], ref rand, netInfo, partA.Position(p1));
+                        AdjustElevation(node[i], m_elevation);
                         if (i == 0)
                         {
-                            if (Singleton<NetManager>.instance.CreateSegment(out segment[i], ref rand, netInfo, node1, node[i], VectorUtils.NormalizeXZ(pos1 - pos0), -VectorUtils.NormalizeXZ(partA.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            if (Singleton<NetManager>.instance.CreateSegment(out segment[i], ref rand, netInfo, m_node1, node[i], VectorUtils.NormalizeXZ(m_pos1 - m_pos0), -VectorUtils.NormalizeXZ(partA.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                         else
@@ -1355,64 +1742,115 @@ namespace AdvancedRoadTools.UI
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                     }
+                    else
+                    {
+                        if (i == 0)
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(m_pos1, partA.Position(p1), Singleton<NetManager>.instance.m_nodes.m_buffer[m_node1].m_elevation, m_elevation);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(partA.Position(p2), partA.Position(p1), m_elevation, m_elevation);
+                        }
+                    }
                 }
+            }
 
-                for (int i = 0; i <= partBNum; i++)
+            for (int i = 0; i <= partBNum; i++)
+            {
+                float p1 = (float)(i + 1) / (float)(partBNum + 1);
+                float p2 = (float)(i) / (float)(partBNum + 1);
+                if (!onlyShow)
                 {
-                    float p1 = (float)(i + 1) / (float)(partBNum + 1);
-                    float p2 = (float)(i) / (float)(partBNum + 1);
                     CreateNode(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
+                    AdjustElevation(node[i + partANum + 1], m_elevation);
                     if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], VectorUtils.NormalizeXZ(partB.Tangent(p2)), -VectorUtils.NormalizeXZ(partB.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
-
-
-                for (int i = 0; i <= partCNum; i++)
+                else
                 {
-                    float p1 = (float)(i + 1) / (float)(partCNum + 1);
-                    float p2 = (float)(i) / (float)(partCNum + 1);
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partB.Position(p2), partB.Position(p1), m_elevation, m_elevation);
+                }
+            }
+
+
+            for (int i = 0; i <= partCNum; i++)
+            {
+                float p1 = (float)(i + 1) / (float)(partCNum + 1);
+                float p2 = (float)(i) / (float)(partCNum + 1);
+                if (!onlyShow)
+                {
                     CreateNode(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
+                    AdjustElevation(node[i + partANum + partBNum + 2], m_elevation);
                     if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + 2], ref rand, netInfo, node[i + partANum + partBNum + 1], node[i + partANum + partBNum + 2], VectorUtils.NormalizeXZ(partC.Tangent(p2)), -VectorUtils.NormalizeXZ(partC.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
-
-
-                for (int i = 0; i <= partDNum; i++)
+                else
                 {
-                    float p1 = (float)(i + 1) / (float)(partDNum + 1);
-                    float p2 = (float)(i) / (float)(partDNum + 1);
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partC.Position(p2), partC.Position(p1), m_elevation, m_elevation);
+                }
+            }
+
+
+            for (int i = 0; i <= partDNum; i++)
+            {
+                float p1 = (float)(i + 1) / (float)(partDNum + 1);
+                float p2 = (float)(i) / (float)(partDNum + 1);
+                if (!onlyShow)
+                {
                     CreateNode(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
+                    AdjustElevation(node[i + partANum + partBNum + partCNum + 3], m_elevation);
                     if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + 2], node[i + partANum + partBNum + partCNum + 3], VectorUtils.NormalizeXZ(partD.Tangent(p2)), -VectorUtils.NormalizeXZ(partD.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
-
-                if (partENum > 0)
+                else
                 {
-                    for (int i = 1; i <= partENum; i++)
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partD.Position(p2), partD.Position(p1), m_elevation, m_elevation);
+                }
+            }
+
+            if (partENum > 0)
+            {
+                for (int i = 1; i <= partENum; i++)
+                {
+                    float p1 = (float)i / (float)(partENum + 1);
+                    float p2 = (float)(i - 1) / (float)(partENum + 1);
+                    if (!onlyShow)
                     {
-                        float p1 = (float)i / (float)(partENum + 1);
-                        float p2 = (float)(i - 1) / (float)(partENum + 1);
                         CreateNode(out node[i + partANum + partBNum + partCNum + partDNum + 3], ref rand, netInfo, partE.Position(p1));
+                        AdjustElevation(node[i + partANum + partBNum + partCNum + partDNum + 3], m_elevation);
                         if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + partDNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + partDNum + 2], node[i + partANum + partBNum + partCNum + partDNum + 3], VectorUtils.NormalizeXZ(partE.Tangent(p2)), -VectorUtils.NormalizeXZ(partE.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                             Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
+                    else
+                    {
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position(p2), partE.Position(p1), m_elevation, m_elevation);
+                    }
                 }
+            }
 
+            if (!onlyShow)
+            {
                 ushort segmentId;
                 float tmp = (float)partENum / (float)(partENum + 1);
-                if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partBNum + partCNum + partDNum + partENum + 3], node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -endirFix, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partBNum + partCNum + partDNum + partENum + 3], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -endirFix, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                     Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
             }
             else
             {
-                if (Vector2.Distance(VectorUtils.XZ(pos1 - pos0), VectorUtils.XZ(NodeA1 - pos1)) == 0)
+                currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+            }
+
+            if (onlyShow)
+            {
+                if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.1f)
                 {
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 }
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, 16f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
             }
         }
     }
