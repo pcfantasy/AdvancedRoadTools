@@ -43,7 +43,7 @@ namespace AdvancedRoadTools
             {
                 if (mode == LoadMode.LoadGame || mode == LoadMode.NewGame || mode == LoadMode.NewMap || mode == LoadMode.LoadMap || mode == LoadMode.NewAsset || mode == LoadMode.LoadAsset)
                 {
-                    //OptionUI.LoadSetting();
+                    OptionUI.LoadSetting();
                     SetupGui();
                     SetupTools();
                     //InitDetour();
@@ -95,6 +95,7 @@ namespace AdvancedRoadTools
                 AdvancedTools.instance = toolController.gameObject.AddComponent<AdvancedTools>();
                 AdvancedTools.instance.enabled = false;
             }
+            AdvancedTools.InitData();
         }
         public static void SetupGui()
         {

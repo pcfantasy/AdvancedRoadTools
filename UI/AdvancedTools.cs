@@ -26,7 +26,7 @@ namespace AdvancedRoadTools.UI
         ushort node0;
         ushort node1;
         ushort node2;
-        byte radius;
+        public static byte radius;
         public static byte rampMode;
         public static byte height;
         public static int currentMoney;
@@ -70,6 +70,11 @@ namespace AdvancedRoadTools.UI
         protected override void Awake()
         {
             base.Awake();
+            InitData();
+        }
+
+        public static void InitData()
+        {
             radius = 20;
             rampMode = 0;
             height = 0;
@@ -140,7 +145,7 @@ namespace AdvancedRoadTools.UI
                                 storedRadius[hoveredRoundIndex] = radius;
                                 updateRoundMode = updateRoundMode ? false : true;
                             }
-                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                     }
                 }
@@ -179,7 +184,7 @@ namespace AdvancedRoadTools.UI
                                 }
                                 updateRoundMode = updateRoundMode ? false : true;
                             }
-                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                     }
                 }
@@ -233,26 +238,33 @@ namespace AdvancedRoadTools.UI
 
                             if (_cashAmount < currentMoney)
                             {
-                                CustomShowExtraInfo(true, "Do not have enough money", pos);
+                                if (OptionUI.isMoneyNeeded)
+                                    CustomShowExtraInfo(true, "Do not have enough money", pos);
                             }
                             else
                             {
-                                Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
+                                if (OptionUI.isMoneyNeeded)
+                                    Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
+
+                                bool noNeedUpdate = false;
                                 if (rampMode == 0)
                                 {
-                                    Build3RoundRoad(false, false, false, 0, 0, null, out bool _);
+                                    Build3RoundRoad(false, false, false, 0, 0, null, out noNeedUpdate);
                                 }
                                 else
                                 {
-                                    Build1RoundRoad(false, false, false, 0, 0, null, out bool _);
+                                    Build1RoundRoad(false, false, false, 0, 0, null, out noNeedUpdate);
                                 }
-                                storedNum = 255;
-                                m_step = 0;
-                                CustomShowToolInfo(show: false, null, Vector3.zero);
-                                ToolsModifierControl.SetTool<DefaultTool>();
-                                enabled = false;
-                                updateRoundMode = false;
-                                currentMoney = 0;
+                                if (!noNeedUpdate)
+                                {
+                                    storedNum = 255;
+                                    m_step = 0;
+                                    CustomShowToolInfo(show: false, null, Vector3.zero);
+                                    ToolsModifierControl.SetTool<DefaultTool>();
+                                    enabled = false;
+                                    updateRoundMode = false;
+                                    currentMoney = 0;
+                                }
                             }
                         }
                     }
@@ -261,7 +273,7 @@ namespace AdvancedRoadTools.UI
                         pos2 = Vector3.zero;
                         node2 = 0;
                     }
-                    CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + currentMoney.ToString(), output.m_hitPos);
+                    CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney/100f).ToString(), output.m_hitPos);
                 }
             }
         }
@@ -270,8 +282,8 @@ namespace AdvancedRoadTools.UI
         {
             if (enabled == true)
             {
-                if (OptionsKeymappingRoadTool.m_add.IsPressed(e)) radius = (byte)COMath.Clamp(radius + 1, 10, 250);
-                if (OptionsKeymappingRoadTool.m_minus.IsPressed(e)) radius = (byte)COMath.Clamp(radius - 1, 10, 250);
+                if (OptionsKeymappingRoadTool.m_add.IsPressed(e)) radius = (byte)COMath.Clamp(radius + 1, 5, 250);
+                if (OptionsKeymappingRoadTool.m_minus.IsPressed(e)) radius = (byte)COMath.Clamp(radius - 1, 5, 250);
                 if (OptionsKeymappingRoadTool.m_rise.IsPressed(e)) height = (byte)COMath.Clamp(height + 1, 0, 32);
                 if (OptionsKeymappingRoadTool.m_lower.IsPressed(e)) height = (byte)COMath.Clamp(height - 1, 0, 32);
                 if (OptionsKeymappingRoadTool.m_laterBuild.IsPressed(e))
@@ -315,11 +327,13 @@ namespace AdvancedRoadTools.UI
 
                         if (_cashAmount < currentMoney)
                         {
-                            CustomShowExtraInfo(true, "Do not have enough money", pos);
+                            if (OptionUI.isMoneyNeeded)
+                                CustomShowExtraInfo(true, "Do not have enough money", pos);
                         }
                         else
                         {
-                            Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
+                            if (OptionUI.isMoneyNeeded)
+                                Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
                             if (storedNum != 255)
                             {
                                 for (int i = 0; i <= storedNum; i++)
@@ -483,7 +497,7 @@ namespace AdvancedRoadTools.UI
                         {
                             Build3RoundRoad(true, false, true, (byte)i, (byte)i, cameraInfo, out bool _);
                         }
-                        else if (rampMode == 2)
+                        else if (storedRampMode[i] == 2)
                         {
                             Build1RoundRoad(true, false, true, (byte)i, (byte)i, cameraInfo, out bool _);
                         }
@@ -510,13 +524,16 @@ namespace AdvancedRoadTools.UI
                 {
                     for (int i = 0; i <= storedNum; i++)
                     {
-                        if (hoveredRoundIndex == (byte)i)
+                        if (storedRampMode[i] == 0)
                         {
-                            Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(10, 70, 0, 90), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
-                        }
-                        else
-                        {
-                            Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(45, 126, 0, 214), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                            if (hoveredRoundIndex == (byte)i)
+                            {
+                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(10, 70, 0, 90), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                            }
+                            else
+                            {
+                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(45, 126, 0, 214), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                            }
                         }
                     }
                 }
@@ -1026,14 +1043,14 @@ namespace AdvancedRoadTools.UI
             }
             if (onlyShow)
             {
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 if (!rightTurn)
                 {
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 }
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
             }
         }
 
@@ -1845,12 +1862,12 @@ namespace AdvancedRoadTools.UI
             {
                 if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.1f)
                 {
-                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                    Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 }
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
-                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, m_loacalNetInfo.m_halfWidth * 2f, -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partB, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+                Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
             }
         }
     }

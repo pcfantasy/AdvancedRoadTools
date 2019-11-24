@@ -12,12 +12,12 @@ namespace AdvancedRoadTools.UI
 {
     public class OptionUI : MonoBehaviour
     {
-        public static bool isMoreRound = false;
+        public static bool isMoneyNeeded = false;
         public static void makeSettings(UIHelperBase helper)
         {
             // tabbing code is borrowed from RushHour mod
             // https://github.com/PropaneDragon/RushHour/blob/release/RushHour/Options/OptionHandler.cs
-            //LoadSetting();
+            LoadSetting();
             UIHelper actualHelper = helper as UIHelper;
             UIComponent container = actualHelper.self as UIComponent;
 
@@ -49,6 +49,10 @@ namespace AdvancedRoadTools.UI
             var panel = generalGroup.self as UIPanel;
 
             panel.gameObject.AddComponent<OptionsKeymappingRoadTool>();
+
+            var generalGroup1 = panelHelper.AddGroup("Other Option") as UIHelper;
+            generalGroup1.AddCheckbox("Need money to build road", isMoneyNeeded, (index) => isMoneyNeededEnable(index));
+            SaveSetting();
 
             // Function_ShortCut
             /*++tabIndex;
@@ -89,12 +93,12 @@ namespace AdvancedRoadTools.UI
             return tabButton;
         }
 
-        /*public static void SaveSetting()
+        public static void SaveSetting()
         {
             //save langugae
             FileStream fs = File.Create("AdvancedRoadTools_setting.txt");
             StreamWriter streamWriter = new StreamWriter(fs);
-            streamWriter.WriteLine(isMoreRound);
+            streamWriter.WriteLine(isMoneyNeeded);
             streamWriter.Flush();
             fs.Close();
         }
@@ -107,22 +111,22 @@ namespace AdvancedRoadTools.UI
                 StreamReader sr = new StreamReader(fs);
                 string strLine = sr.ReadLine();
 
-                if (strLine == "True")
+                if (strLine == "False")
                 {
-                    isMoreRound = true;
+                    isMoneyNeeded = false;
                 }
                 else
                 {
-                    isMoreRound = false;
+                    isMoneyNeeded = true;
                 }
                 sr.Close();
                 fs.Close();
             }
         }
-        public static void isMoreRoundEnable(bool index)
+        public static void isMoneyNeededEnable(bool index)
         {
-            isMoreRound = index;
+            isMoneyNeeded = index;
             SaveSetting();
-        }*/
+        }
     }
 }
