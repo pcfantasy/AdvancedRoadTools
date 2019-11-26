@@ -31,6 +31,11 @@ namespace AdvancedRoadTools.UI
         public static byte height;
         public static int currentMoney;
 
+        public static byte leftAddWidth;
+        public static byte rightAddWidth;
+        public static byte mainRoadWidth;
+        public static byte roadLength;
+
         //load&restore
         public static Vector3[] storedPos0 = new Vector3[8];
         public static Vector3[] storedPos1 = new Vector3[8];
@@ -92,6 +97,10 @@ namespace AdvancedRoadTools.UI
             hoveredRoundIndex = 255;
             updateRoundMode = false;
             currentMoney = 0;
+            leftAddWidth = 0;
+            rightAddWidth = 0;
+            mainRoadWidth = 16;
+            roadLength = 24;
         }
         protected override void OnToolUpdate()
         {
@@ -197,14 +206,38 @@ namespace AdvancedRoadTools.UI
                     switch (m_step)
                     {
                         case 0:
-                            determineHoveredElements(); pos0 = GetNode(m_hover).m_position; node0 = m_hover; CustomShowToolInfo(true, "Please select start node", output.m_hitPos); break;
+                            determineHoveredElements(); 
+                            pos0 = GetNode(m_hover).m_position; 
+                            node0 = m_hover; 
+                            CustomShowToolInfo(true, "Please select start node", output.m_hitPos);
+                            if (rampMode == 1)
+                            {
+                                if (CheckYRoadVaild(node0) == "False")
+                                {
+                                    CustomShowExtraInfo(true, "This Node is available", pos);
+                                }
+                                else
+                                {
+                                    CustomShowExtraInfo(false, null, Vector3.zero);
+                                }
+                            }
+                            break;
                         case 1:
-                            if (rampMode != 2)
+                            if (rampMode == 0)
                             {
                                 pos1 = output.m_hitPos;
                                 CustomShowToolInfo(true, "Please select round centre and adjust radius " + radius.ToString(), output.m_hitPos);
                             }
-                            else
+                            else if (rampMode == 1)
+                            {
+                                if (CheckYRoadVaild(node0) == "Dual")
+                                {
+                                    rightAddWidth = leftAddWidth;
+                                    leftAddWidth = rightAddWidth;
+                                }
+                                CustomShowToolInfo(true, "Please select left added width = " + leftAddWidth.ToString() + "\nright added width = " + rightAddWidth.ToString(), output.m_hitPos);
+                            }
+                            else if (rampMode == 2)
                             {
                                 determineHoveredElements();
                                 pos1 = GetNode(m_hover).m_position;
@@ -225,11 +258,17 @@ namespace AdvancedRoadTools.UI
                 }
                 else
                 {
+                    if (rampMode != 1)
                     determineHoveredElements();
-                    if (m_hover != 0)
+
+                    if (m_hover != 0 || rampMode == 1)
                     {
-                        pos2 = GetNode(m_hover).m_position;
-                        node2 = m_hover;
+                        if (rampMode != 1)
+                        {
+                            pos2 = GetNode(m_hover).m_position;
+                            node2 = m_hover;
+                        }
+
                         if (Input.GetMouseButtonUp(0))
                         {
                             FieldInfo cashAmount;
@@ -251,7 +290,11 @@ namespace AdvancedRoadTools.UI
                                 {
                                     Build3RoundRoad(false, false, false, 0, 0, null, out noNeedUpdate);
                                 }
-                                else
+                                else if (rampMode == 1)
+                                {
+                                    BuildYRoad(false,null);
+                                }
+                                else if (rampMode == 2)
                                 {
                                     Build1RoundRoad(false, false, false, 0, 0, null, out noNeedUpdate);
                                 }
@@ -260,6 +303,7 @@ namespace AdvancedRoadTools.UI
                                     storedNum = 255;
                                     m_step = 0;
                                     CustomShowToolInfo(show: false, null, Vector3.zero);
+                                    CustomShowExtraInfo(show: false, null, Vector3.zero);
                                     ToolsModifierControl.SetTool<DefaultTool>();
                                     enabled = false;
                                     updateRoundMode = false;
@@ -273,7 +317,22 @@ namespace AdvancedRoadTools.UI
                         pos2 = Vector3.zero;
                         node2 = 0;
                     }
-                    CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney/100f).ToString(), output.m_hitPos);
+
+                    if (rampMode != 1)
+                        CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                    else
+                    {
+                        if (CheckYRoadVaild(node0) == "Dual")
+                        {
+                            float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
+                            CustomShowToolInfo(true, "Please select mainRoadWidth. \nNow mainRoadWidth = " + mainRoadWidth.ToString() + "\n Now rightRoadWidth&leftRoadWidth = " + ((totalWidth - mainRoadWidth)/2f).ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                        }
+                        else
+                        {
+                            float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
+                            CustomShowToolInfo(true, "Please select leftRoadWidth. \nNow leftRoadWidth = " + mainRoadWidth.ToString() + "\n Now rightRoadWidth = " + (totalWidth - mainRoadWidth).ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                        }
+                    }
                 }
             }
         }
@@ -282,13 +341,45 @@ namespace AdvancedRoadTools.UI
         {
             if (enabled == true)
             {
-                if (OptionsKeymappingRoadTool.m_add.IsPressed(e)) radius = (byte)COMath.Clamp(radius + 1, 5, 250);
-                if (OptionsKeymappingRoadTool.m_minus.IsPressed(e)) radius = (byte)COMath.Clamp(radius - 1, 5, 250);
-                if (OptionsKeymappingRoadTool.m_rise.IsPressed(e)) height = (byte)COMath.Clamp(height + 1, 0, 32);
-                if (OptionsKeymappingRoadTool.m_lower.IsPressed(e)) height = (byte)COMath.Clamp(height - 1, 0, 32);
+                if (OptionsKeymappingRoadTool.m_add.IsPressed(e))
+                {
+                    if (rampMode!=1)
+                        radius = (byte)COMath.Clamp(radius + 1, 5, 250);
+                    else if (m_step == 1)
+                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 4, 0, 32);
+                    else if (m_step == 2)
+                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth + 4, 0, 32);
+                }
+                if (OptionsKeymappingRoadTool.m_minus.IsPressed(e))
+                {
+                    if (rampMode != 1)
+                        radius = (byte)COMath.Clamp(radius - 1, 5, 250);
+                    else if (m_step == 1)
+                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 4, 0, 32);
+                    else if (m_step == 2)
+                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth - 4, 0, 32);
+                }
+                if (OptionsKeymappingRoadTool.m_rise.IsPressed(e))
+                {
+                    if (rampMode != 1)
+                        height = (byte)COMath.Clamp(height + 1, 0, 32);
+                    else if (m_step == 1)
+                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth + 4, 0, 32);
+                    else if (m_step == 2)
+                        roadLength = (byte)COMath.Clamp(roadLength + 4, 16, 32);
+                }
+                if (OptionsKeymappingRoadTool.m_lower.IsPressed(e))
+                {
+                    if (rampMode != 1)
+                        height = (byte)COMath.Clamp(height - 1, 0, 32);
+                    else if (m_step == 1)
+                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth - 4, 0, 32);
+                    else if (m_step == 2)
+                        roadLength = (byte)COMath.Clamp(roadLength - 4, 16, 32);
+                }
                 if (OptionsKeymappingRoadTool.m_laterBuild.IsPressed(e))
                 {
-                    if (!updateRoundMode)
+                    if (!updateRoundMode && (rampMode != 1))
                     {
                         if ((storedNum < 8) || (storedNum == 255))
                         {
@@ -319,7 +410,7 @@ namespace AdvancedRoadTools.UI
 
                 if (OptionsKeymappingRoadTool.m_build.IsPressed(e))
                 {
-                    if (!updateRoundMode)
+                    if (!updateRoundMode && (rampMode != 1))
                     {
                         FieldInfo cashAmount;
                         cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -750,7 +841,7 @@ namespace AdvancedRoadTools.UI
 
             var rand = new Randomizer(0u);
             //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
-            //DebugLog.LogToFileOnly(m_netInfo.name);
+            DebugLog.LogToFileOnly(m_netInfo.name);
             var m_prefab = m_loacalNetInfo;
             ToolErrors errors = default(ToolErrors);
             var netInfo = m_prefab.m_netAI.GetInfo(m_elevation, m_elevation, 5, false, false, false, false, ref errors);
@@ -821,7 +912,7 @@ namespace AdvancedRoadTools.UI
                 isUpdate = true;
                 return;
             }
-            
+
             CustomShowExtraInfo(false, null, Vector3.zero);
 
             if (store)
@@ -1885,6 +1976,177 @@ namespace AdvancedRoadTools.UI
                 Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partC, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partD, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partE, Mathf.Max(6f, m_loacalNetInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
+            }
+        }
+
+        public string CheckYRoadVaild(ushort node)
+        {
+            int segmentCount = 0;
+            int directionCount = 1;
+            for (int i = 0; i < 8; i++)
+            {
+                ushort segment = Singleton<NetManager>.instance.m_nodes.m_buffer[node].GetSegment(i);
+                if (segment != 0)
+                {
+                    segmentCount++;
+                    NetInfo info = Singleton<NetManager>.instance.m_segments.m_buffer[segment].Info;
+                    for (int j = 0; j < info.m_lanes.Length; j++)
+                    {
+                        if (info.m_lanes[j].m_laneType.IsFlagSet(NetInfo.LaneType.Vehicle))
+                        {
+                            for (int k = 0; k < info.m_lanes.Length; k++)
+                            {
+                                if (info.m_lanes[k].m_laneType.IsFlagSet(NetInfo.LaneType.Vehicle))
+                                {
+                                    if (info.m_lanes[j].m_direction != info.m_lanes[k].m_direction)
+                                    {
+                                        directionCount = 2;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (directionCount == 2)
+                            break;
+                    }
+                }
+                if (segmentCount >= 2)
+                {
+                    break;
+                }
+            }
+
+            if (segmentCount >= 2)
+                return "False";
+
+            if (directionCount == 2)
+                return "Dual";
+
+            return "Single";
+        }
+        public void BuildYRoad(bool onlyShow, RenderManager.CameraInfo cameraInfo)
+        {
+            if (CheckYRoadVaild(node0) == "Single")
+            {
+                CustomShowExtraInfo(show: false, null, Vector3.zero);
+                Vector3 startDir = -GetNodeDir(node0);
+                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
+                float leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth - mainRoadWidth / 2f;
+                float rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth - (totalWidth - mainRoadWidth) / 2f;
+                Vector3 node1Pos = pos0 + roadLength * startDir + (new Vector3(-startDir.z, 0, startDir.x)) * leftOffset;
+                //Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, 0, startDir.x)) * roadLength * leftOffset / 8f;
+                Vector3 node2Pos = pos0 + roadLength * startDir + (new Vector3(startDir.z, 0, -startDir.x)) * rightOffset;
+                //Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, 0, -startDir.x)) * roadLength * rightOffset / 8f;
+                Vector3 node3Pos = node1Pos + roadLength * startDir;
+                Vector3 node4Pos = node2Pos + roadLength * startDir;
+                var rand = new Randomizer(0u);
+                //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
+                //DebugLog.LogToFileOnly(m_netInfo.name);
+                var m_prefab = m_netInfo;
+                ToolErrors errors = default(ToolErrors);
+                var ele = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].m_elevation;
+                var netInfo = m_prefab.m_netAI.GetInfo(ele, ele, 5, false, false, false, false, ref errors);
+
+                ushort localNode1;
+                //ushort localSegment1;            
+                CreateNode(out localNode1, ref rand, netInfo, node1Pos);
+                AdjustElevation(localNode1, ele);
+                //if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                //    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+
+                ushort localNode2;
+                //ushort localSegment2;
+                CreateNode(out localNode2, ref rand, netInfo, node2Pos);
+                AdjustElevation(localNode2, ele);
+                //if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                //    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+
+                ushort localNode3;
+                ushort localSegment1;
+                CreateNode(out localNode3, ref rand, netInfo, node3Pos);
+                AdjustElevation(localNode3, ele);
+                if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
+
+                ushort localNode4;
+                ushort localSegment2;
+                CreateNode(out localNode4, ref rand, netInfo, node4Pos);
+                AdjustElevation(localNode4, ele);
+                if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
+                //Singleton<NetManager>.instance.UpdateSegmentRenderer((ushort)localSegment1, true);
+                //Singleton<NetManager>.instance.UpdateSegmentRenderer((ushort)localSegment2, true);
+            }
+            else if (CheckYRoadVaild(node0) == "Dual")
+            {
+                CustomShowExtraInfo(show: false, null, Vector3.zero);
+                Vector3 startDir = -GetNodeDir(node0);
+                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
+                float leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth - (totalWidth - mainRoadWidth) / 4f;
+                float rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth - (totalWidth - mainRoadWidth) / 4f;
+                Vector3 node1Pos = pos0 + roadLength * startDir + (new Vector3(-startDir.z, 0, startDir.x)) * leftOffset;
+                //Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, 0, startDir.x)) * roadLength * leftOffset / 8f;
+                Vector3 node2Pos = pos0 + roadLength * startDir + (new Vector3(startDir.z, 0, -startDir.x)) * rightOffset;
+                //Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, 0, -startDir.x)) * roadLength * rightOffset / 8f;
+                Vector3 node3Pos = node1Pos + roadLength * startDir;
+                Vector3 node4Pos = node2Pos + roadLength * startDir;
+                Vector3 node5Pos = pos0 + roadLength * startDir;
+                Vector3 node6Pos = node5Pos + roadLength * startDir;
+                var rand = new Randomizer(0u);
+                //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
+                //DebugLog.LogToFileOnly(m_netInfo.name);
+                var m_prefab = m_netInfo;
+                ToolErrors errors = default(ToolErrors);
+                var ele = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].m_elevation;
+                var netInfo = m_prefab.m_netAI.GetInfo(ele, ele, 5, false, false, false, false, ref errors);
+
+                ushort localNode1;
+                //ushort localSegment1;            
+                CreateNode(out localNode1, ref rand, netInfo, node1Pos);
+                AdjustElevation(localNode1, ele);
+                //if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                //    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+
+                ushort localNode2;
+                //ushort localSegment2;
+                CreateNode(out localNode2, ref rand, netInfo, node2Pos);
+                AdjustElevation(localNode2, ele);
+                //if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                //    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+
+                ushort localNode3;
+                ushort localSegment1;
+                CreateNode(out localNode3, ref rand, netInfo, node3Pos);
+                AdjustElevation(localNode3, ele);
+                if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
+
+                ushort localNode4;
+                ushort localSegment2;
+                CreateNode(out localNode4, ref rand, netInfo, node4Pos);
+                AdjustElevation(localNode4, ele);
+                if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
+
+                ushort localNode5;
+                CreateNode(out localNode5, ref rand, netInfo, node5Pos);
+                AdjustElevation(localNode5, ele);
+
+                ushort localNode6;
+                ushort localSegment3;
+                CreateNode(out localNode6, ref rand, netInfo, node6Pos);
+                AdjustElevation(localNode6, ele);
+                if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, localNode5, localNode6, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                currentMoney += netInfo.m_netAI.GetConstructionCost(node5Pos, node6Pos, ele, ele);
+            }
+            else if (CheckYRoadVaild(node0) == "False")
+            {
+                CustomShowExtraInfo(true, "This Node is available", pos);
             }
         }
     }

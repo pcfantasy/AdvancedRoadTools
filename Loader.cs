@@ -23,11 +23,9 @@ namespace AdvancedRoadTools
         public static bool isGuiRunning = false;
         public static ThreeRoundButton threeRoundButton;
         public static OneRoundButton oneRoundButton;
+        public static YRoadButton yRoadButton;
         public static string m_atlasName = "AdvancedRoadTools";
         public static bool m_atlasLoaded;
-        public static UIPanel RoadToolsInfo;
-        public static GameObject RoadToolsWindowGameObject;
-        public static GameObject RoadToolsWindowGameObject1;
         public static bool Done { get; private set; } // Only one Assets installation throughout the application
 
         public override void OnCreated(ILoading loading)
@@ -107,6 +105,7 @@ namespace AdvancedRoadTools
 
                 SetupThreeRoundButton();
                 SetupOneRoundButton();
+                SetupYRoadButton();
             isGuiRunning = true;
            //}
         }
@@ -125,6 +124,15 @@ namespace AdvancedRoadTools
             if (oneRoundButton == null)
             {
                 oneRoundButton = (parentGuiView.AddUIComponent(typeof(OneRoundButton)) as OneRoundButton);
+            }
+            //mainButton.Show();
+        }
+
+        public static void SetupYRoadButton()
+        {
+            if (yRoadButton == null)
+            {
+                yRoadButton = (parentGuiView.AddUIComponent(typeof(YRoadButton)) as YRoadButton);
             }
             //mainButton.Show();
         }
@@ -253,8 +261,10 @@ namespace AdvancedRoadTools
                 parentGuiView = null;
                 UnityEngine.Object.Destroy(threeRoundButton);
                 UnityEngine.Object.Destroy(oneRoundButton);
+                UnityEngine.Object.Destroy(yRoadButton);
                 threeRoundButton = null;
                 oneRoundButton = null;
+                yRoadButton = null;
             }
         }
     }

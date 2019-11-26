@@ -65,6 +65,7 @@
     <Compile Include="Loader.cs" />
     <Compile Include="NewData\CustomNetSegment.cs" />
     <Compile Include="Threading.cs" />
+    <Compile Include="UI\YRoadButton.cs" />
     <Compile Include="Util\DebugLog.cs" />
     <Compile Include="Util\Localization.cs" />
     <Compile Include="Util\RedirectionHelper.cs" />
