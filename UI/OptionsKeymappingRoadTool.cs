@@ -10,19 +10,19 @@ namespace AdvancedRoadTools.UI
     {
         private static readonly string kKeyBindingTemplate = "KeyBindingTemplate";
         public static readonly SavedInputKey m_add = new SavedInputKey("+1",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.Equals, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.Equals, false, false, false), true);
         public static readonly SavedInputKey m_rise = new SavedInputKey("up",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.PageUp, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.PageUp, false, false, false), true);
         public static readonly SavedInputKey m_minus = new SavedInputKey("-1",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.Minus, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.Minus, false, false, false), true);
         public static readonly SavedInputKey m_lower = new SavedInputKey("down",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.PageDown, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.PageDown, false, false, false), true);
         public static readonly SavedInputKey m_build = new SavedInputKey("build",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.J, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.J, false, false, false), true);
         public static readonly SavedInputKey m_laterBuild = new SavedInputKey("laterBuild",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.H, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.H, false, false, false), true);
         public static readonly SavedInputKey m_clear = new SavedInputKey("clear",
-            "OptionsKeymappingRoadTool_SETTING", SavedInputKey.Encode(KeyCode.K, false, false, false), true);
+            "AdvancedRoadTools_SETTING", SavedInputKey.Encode(KeyCode.K, false, false, false), true);
 
         private int count;
 
