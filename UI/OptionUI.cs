@@ -1,4 +1,5 @@
-﻿using ColossalFramework.UI;
+﻿using AdvancedRoadTools.Util;
+using ColossalFramework.UI;
 using ICities;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace AdvancedRoadTools.UI
             int tabIndex = 0;
             // Lane_ShortCut
 
-            AddOptionTab(tabStrip, "ShortCut");
+            AddOptionTab(tabStrip, Localization.Get("ShortCut"));
             tabStrip.selectedIndex = tabIndex;
 
             UIPanel currentPanel = tabStrip.tabContainer.components[tabIndex] as UIPanel;
@@ -45,13 +46,13 @@ namespace AdvancedRoadTools.UI
 
             UIHelper panelHelper = new UIHelper(currentPanel);
 
-            var generalGroup = panelHelper.AddGroup("ShortCut") as UIHelper;
+            var generalGroup = panelHelper.AddGroup(Localization.Get("ShortCut")) as UIHelper;
             var panel = generalGroup.self as UIPanel;
 
             panel.gameObject.AddComponent<OptionsKeymappingRoadTool>();
 
-            var generalGroup1 = panelHelper.AddGroup("Other Option") as UIHelper;
-            generalGroup1.AddCheckbox("Need money to build road", isMoneyNeeded, (index) => isMoneyNeededEnable(index));
+            var generalGroup1 = panelHelper.AddGroup(Localization.Get("OtherOption")) as UIHelper;
+            generalGroup1.AddCheckbox(Localization.Get("NeedMoney"), isMoneyNeeded, (index) => isMoneyNeededEnable(index));
             SaveSetting();
 
             // Function_ShortCut

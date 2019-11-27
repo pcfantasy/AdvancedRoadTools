@@ -46,11 +46,11 @@ namespace AdvancedRoadTools
                     SetupTools();
                     //InitDetour();
                     DebugLog.LogToFileOnly("OnLevelLoaded");
-                    if (mode == LoadMode.NewGame)
-                    {
+                    //if (mode == LoadMode.NewGame)
+                    //{
                         //InitData();
-                        DebugLog.LogToFileOnly("InitData");
-                    }
+                        //DebugLog.LogToFileOnly("InitData");
+                    //}
                 }
             }
         }
@@ -72,14 +72,16 @@ namespace AdvancedRoadTools
         {
             if (SpriteUtilities.GetAtlas(m_atlasName) != null) return;
             var modPath = PluginManager.instance.FindPluginInfo(Assembly.GetExecutingAssembly()).modPath;
-            m_atlasLoaded = SpriteUtilities.InitialiseAtlas(Path.Combine(modPath, "Resources/CSUR.png"), m_atlasName);
+            m_atlasLoaded = SpriteUtilities.InitialiseAtlas(Path.Combine(modPath, "Resources/Icon.png"), m_atlasName);
             if (m_atlasLoaded)
             {
                 var spriteSuccess = true;
-                spriteSuccess = SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(2, 2), new Vector2(30, 30)), "0P_R", m_atlasName)
-                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(34, 2), new Vector2(30, 30)), "0P_L", m_atlasName)
-                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(66, 2), new Vector2(30, 30)), "0P_S", m_atlasName)
-                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(98, 2), new Vector2(30, 30)), "1_R", m_atlasName);
+                spriteSuccess = SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(2, 2), new Vector2(30, 30)), "3Round", m_atlasName)
+                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(34, 2), new Vector2(30, 30)), "3Round_S", m_atlasName)
+                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(66, 2), new Vector2(30, 30)), "1Round", m_atlasName)
+                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(98, 2), new Vector2(30, 30)), "1Round_S", m_atlasName)
+                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(130, 2), new Vector2(30, 30)), "YRoad", m_atlasName)
+                             && SpriteUtilities.AddSpriteToAtlas(new Rect(new Vector2(162, 2), new Vector2(30, 30)), "YRoad_S", m_atlasName);
                 if (!spriteSuccess) DebugLog.LogToFileOnly("Error: Some sprites haven't been loaded. This is abnormal; you should probably report this to the mod creator.");
             }
             else DebugLog.LogToFileOnly("Error: The texture atlas (provides custom icons) has not loaded. All icons have reverted to text prompts.");
@@ -97,17 +99,16 @@ namespace AdvancedRoadTools
         }
         public static void SetupGui()
         {
-            //LoadSprites();
-            //if (m_atlasLoaded)
-            //{
+            LoadSprites();
+            if (m_atlasLoaded)
+            {
                 parentGuiView = null;
                 parentGuiView = UIView.GetAView();
-
                 SetupThreeRoundButton();
                 SetupOneRoundButton();
                 SetupYRoadButton();
-            isGuiRunning = true;
-           //}
+                isGuiRunning = true;
+            }
         }
 
         public static void SetupThreeRoundButton()

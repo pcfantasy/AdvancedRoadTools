@@ -9,20 +9,13 @@ namespace AdvancedRoadTools.UI
         public override void Start()
         {
             name = "YRoadButton";
-            text = "Y";
+            //text = "Y";
             relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 530f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
-            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth - 70f), (Loader.parentGuiView.fixedHeight / 2 + 100f));
-            //atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName2);
-            //normalBgSprite = "CSUR_BUTTON";
-            //hoveredBgSprite = "CSUR_BUTTON_S";
-            //focusedBgSprite = "CSUR_BUTTON_S";
-            //pressedBgSprite = "CSUR_BUTTON_S";
-            //UISprite internalSprite = AddUIComponent<UISprite>();
-            //internalSprite.atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
-            //internalSprite.spriteName = "RcButton";
-            //internalSprite.relativePosition = new Vector3(0, 0);
-            //internalSprite.width = 50f;
-            //internalSprite.height = 50f;
+            atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
+            normalBgSprite = "YRoad";
+            hoveredBgSprite = "YRoad_S";
+            focusedBgSprite = "YRoad_S";
+            pressedBgSprite = "YRoad_S";
             size = new Vector2(30f, 30f);
             zOrder = 11;
             eventClick += delegate (UIComponent component, UIMouseEventParameter eventParam)

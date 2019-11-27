@@ -10,19 +10,13 @@ namespace AdvancedRoadTools.UI
         public override void Start()
         {
             name = "OneRoundButton";
-            text = "O";
+            //text = "O";
             relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 490f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
-            //atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName2);
-            //normalBgSprite = "CSUR_BUTTON";
-            //hoveredBgSprite = "CSUR_BUTTON_S";
-            //focusedBgSprite = "CSUR_BUTTON_S";
-            //pressedBgSprite = "CSUR_BUTTON_S";
-            //UISprite internalSprite = AddUIComponent<UISprite>();
-            //internalSprite.atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
-            //internalSprite.spriteName = "RcButton";
-            //internalSprite.relativePosition = new Vector3(0, 0);
-            //internalSprite.width = 50f;
-            //internalSprite.height = 50f;
+            atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
+            normalBgSprite = "1Round";
+            hoveredBgSprite = "1Round_S";
+            focusedBgSprite = "1Round_S";
+            pressedBgSprite = "1Round_S";
             size = new Vector2(30f, 30f);
             zOrder = 11;
             eventClick += delegate (UIComponent component, UIMouseEventParameter eventParam)

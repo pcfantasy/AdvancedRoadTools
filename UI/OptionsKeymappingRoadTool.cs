@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AdvancedRoadTools.Util;
 using ColossalFramework;
 using ColossalFramework.Globalization;
 using ColossalFramework.UI;
@@ -32,13 +33,13 @@ namespace AdvancedRoadTools.UI
 
         private void Awake()
         {
-            AddKeymapping("Radius+1", m_add);
-            AddKeymapping("RoadRise", m_rise);
-            AddKeymapping("Radius-1", m_minus);
-            AddKeymapping("RoadLower", m_lower);
-            AddKeymapping("Build", m_build);
-            AddKeymapping("LaterBuild", m_laterBuild);
-            AddKeymapping("Clear", m_clear);
+            AddKeymapping(Localization.Get("HotKeyAdd"), m_add);
+            AddKeymapping(Localization.Get("HotKeyRise"), m_rise);
+            AddKeymapping(Localization.Get("HotKeyMinus"), m_minus);
+            AddKeymapping(Localization.Get("HotKeyLower"), m_lower);
+            AddKeymapping(Localization.Get("HotKeyBuild"), m_build);
+            AddKeymapping(Localization.Get("HotKeyLaterBuild"), m_laterBuild);
+            AddKeymapping(Localization.Get("HotKeyClear"), m_clear);
         }
 
         private void AddKeymapping(string label, SavedInputKey savedInputKey)

@@ -5,7 +5,7 @@
 .vs/AdvancedRoadTools/v16/Server/sqlite3/storage.ide-shm
 .vs/AdvancedRoadTools/v16/Server/sqlite3/storage.ide-wal
 *.cache
-*.txt
 *.dll
 *.pdb
 *.CopyComplete
+obj/Release/AdvancedRoadTools.csproj.FileListAbsolute.txt

@@ -154,7 +154,7 @@ namespace AdvancedRoadTools.UI
                                 storedRadius[hoveredRoundIndex] = radius;
                                 updateRoundMode = updateRoundMode ? false : true;
                             }
-                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, Localization.Get("ChangeRoundCenter") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                     }
                 }
@@ -193,7 +193,7 @@ namespace AdvancedRoadTools.UI
                                 }
                                 updateRoundMode = updateRoundMode ? false : true;
                             }
-                            CustomShowToolInfo(true, "Can change round center now.\n radius = " + radius.ToString() + "\n height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, Localization.Get("ChangeRoundCenter") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                     }
                 }
@@ -209,12 +209,12 @@ namespace AdvancedRoadTools.UI
                             determineHoveredElements(); 
                             pos0 = GetNode(m_hover).m_position; 
                             node0 = m_hover; 
-                            CustomShowToolInfo(true, "Please select start node", output.m_hitPos);
+                            CustomShowToolInfo(true, Localization.Get("STEP0"), output.m_hitPos);
                             if (rampMode == 1)
                             {
                                 if (CheckYRoadVaild(node0) == "False")
                                 {
-                                    CustomShowExtraInfo(true, "This Node is available", pos);
+                                    CustomShowExtraInfo(true, Localization.Get("STEP0ERROR"), pos);
                                 }
                                 else
                                 {
@@ -226,7 +226,7 @@ namespace AdvancedRoadTools.UI
                             if (rampMode == 0)
                             {
                                 pos1 = output.m_hitPos;
-                                CustomShowToolInfo(true, "Please select round centre and adjust radius " + radius.ToString(), output.m_hitPos);
+                                CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP1") + radius.ToString(), output.m_hitPos);
                             }
                             else if (rampMode == 1)
                             {
@@ -235,14 +235,14 @@ namespace AdvancedRoadTools.UI
                                     rightAddWidth = leftAddWidth;
                                     leftAddWidth = rightAddWidth;
                                 }
-                                CustomShowToolInfo(true, "Please select left added width = " + leftAddWidth.ToString() + "\nright added width = " + rightAddWidth.ToString(), output.m_hitPos);
+                                CustomShowToolInfo(true, Localization.Get("YROADSTEP1") + leftAddWidth.ToString() + "\n" + Localization.Get("RightAddedWidth") + rightAddWidth.ToString(), output.m_hitPos);
                             }
                             else if (rampMode == 2)
                             {
                                 determineHoveredElements();
                                 pos1 = GetNode(m_hover).m_position;
                                 node1 = m_hover;
-                                CustomShowToolInfo(true, "Please select post start node for start direction \n radius = " + radius.ToString(), output.m_hitPos);
+                                CustomShowToolInfo(true, Localization.Get("1ROUNDSTEP1") + "\n" + Localization.Get("Radius") + radius.ToString(), output.m_hitPos);
                             }
                             break;
                         default: break;
@@ -278,7 +278,7 @@ namespace AdvancedRoadTools.UI
                             if (_cashAmount < currentMoney)
                             {
                                 if (OptionUI.isMoneyNeeded)
-                                    CustomShowExtraInfo(true, "Do not have enough money", pos);
+                                    CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                             }
                             else
                             {
@@ -319,18 +319,18 @@ namespace AdvancedRoadTools.UI
                     }
 
                     if (rampMode != 1)
-                        CustomShowToolInfo(true, "Please select end node. \nNow radius = " + radius.ToString() + "\n Now Height = " + height.ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                        CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + "radius = " + radius.ToString() + "\n" + "height = " + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                     else
                     {
                         if (CheckYRoadVaild(node0) == "Dual")
                         {
                             float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
-                            CustomShowToolInfo(true, "Please select mainRoadWidth. \nNow mainRoadWidth = " + mainRoadWidth.ToString() + "\n Now rightRoadWidth&leftRoadWidth = " + ((totalWidth - mainRoadWidth)/2f).ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, Localization.Get("YROADSTEP2Dual") + "\n" + Localization.Get("MainRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightLeftRoadWidth") + ((totalWidth - mainRoadWidth)/2f).ToString() +"\n" + Localization.Get("RoadLength") + roadLength.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                         else
                         {
                             float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth;
-                            CustomShowToolInfo(true, "Please select leftRoadWidth. \nNow leftRoadWidth = " + mainRoadWidth.ToString() + "\n Now rightRoadWidth = " + (totalWidth - mainRoadWidth).ToString() + "\n Need construction Fee = " + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            CustomShowToolInfo(true, Localization.Get("YROADSTEP2Single") + "\n" + Localization.Get("LeftRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightRoadWidth") + (totalWidth - mainRoadWidth).ToString() + "\n" + Localization.Get("RoadLength") + roadLength.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                     }
                 }
@@ -366,7 +366,7 @@ namespace AdvancedRoadTools.UI
                     else if (m_step == 1)
                         rightAddWidth = (byte)COMath.Clamp(rightAddWidth + 4, 0, 32);
                     else if (m_step == 2)
-                        roadLength = (byte)COMath.Clamp(roadLength + 4, 16, 32);
+                        roadLength = (byte)COMath.Clamp(roadLength + 8, 16, 32);
                 }
                 if (OptionsKeymappingRoadTool.m_lower.IsPressed(e))
                 {
@@ -375,7 +375,7 @@ namespace AdvancedRoadTools.UI
                     else if (m_step == 1)
                         rightAddWidth = (byte)COMath.Clamp(rightAddWidth - 4, 0, 32);
                     else if (m_step == 2)
-                        roadLength = (byte)COMath.Clamp(roadLength - 4, 16, 32);
+                        roadLength = (byte)COMath.Clamp(roadLength - 8, 16, 32);
                 }
                 if (OptionsKeymappingRoadTool.m_laterBuild.IsPressed(e))
                 {
@@ -385,7 +385,7 @@ namespace AdvancedRoadTools.UI
                         {
                             if (storedNum == 255) storedNum = 0;
                             else storedNum++;
-                            DebugLog.LogToFileOnly("storedNum = " + storedNum.ToString());
+                            //DebugLog.LogToFileOnly("storedNum = " + storedNum.ToString());
                             bool isUpdated = false;
                             if (rampMode == 0)
                             {
@@ -419,7 +419,7 @@ namespace AdvancedRoadTools.UI
                         if (_cashAmount < currentMoney)
                         {
                             if (OptionUI.isMoneyNeeded)
-                                CustomShowExtraInfo(true, "Do not have enough money", pos);
+                                CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                         }
                         else
                         {
@@ -841,7 +841,7 @@ namespace AdvancedRoadTools.UI
 
             var rand = new Randomizer(0u);
             //var m_currentModule = Parser.ModuleNameFromUI(MainUI.fromSelected, MainUI.toSelected, MainUI.symmetry, MainUI.uturnLane, MainUI.hasSidewalk, MainUI.hasBike);
-            DebugLog.LogToFileOnly(m_netInfo.name);
+            //DebugLog.LogToFileOnly(m_netInfo.name);
             var m_prefab = m_loacalNetInfo;
             ToolErrors errors = default(ToolErrors);
             var netInfo = m_prefab.m_netAI.GetInfo(m_elevation, m_elevation, 5, false, false, false, false, ref errors);
@@ -886,29 +886,29 @@ namespace AdvancedRoadTools.UI
 
             if (NodeA1 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeA1 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeA1 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeB1 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeB1 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeB1 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeB2 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeB2 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeB2 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeA2 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeA2 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeA2 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
@@ -948,19 +948,19 @@ namespace AdvancedRoadTools.UI
                 return;
             }
 
-            DebugLog.LogToFileOnly(m_pos0.ToString());
-            DebugLog.LogToFileOnly(m_pos1.ToString());
-            DebugLog.LogToFileOnly(m_pos2.ToString());
+            //DebugLog.LogToFileOnly(m_pos0.ToString());
+            //DebugLog.LogToFileOnly(m_pos1.ToString());
+            //DebugLog.LogToFileOnly(m_pos2.ToString());
 
-            DebugLog.LogToFileOnly(NodeA1.ToString());
-            DebugLog.LogToFileOnly(NodeB1.ToString());
-            DebugLog.LogToFileOnly(NodeB2.ToString());
-            DebugLog.LogToFileOnly(NodeA2.ToString());
+            //DebugLog.LogToFileOnly(NodeA1.ToString());
+            //DebugLog.LogToFileOnly(NodeB1.ToString());
+            //DebugLog.LogToFileOnly(NodeB2.ToString());
+            //DebugLog.LogToFileOnly(NodeA2.ToString());
 
-            DebugLog.LogToFileOnly(NodeA1Dir.ToString());
-            DebugLog.LogToFileOnly(NodeB1Dir.ToString());
-            DebugLog.LogToFileOnly(NodeB2Dir.ToString());
-            DebugLog.LogToFileOnly(NodeA2Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeA1Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeB1Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeB2Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeA2Dir.ToString());
 
             int m_nodeNum = 0;
             int partANum = (int)(Vector2.Distance(VectorUtils.XZ(m_pos0), VectorUtils.XZ(NodeA1)) / 64f);
@@ -1738,46 +1738,46 @@ namespace AdvancedRoadTools.UI
 
             if (NodeA1 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeA1 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeA1 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeB1 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeB1 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeB1 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeB2 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeB2 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeB2 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
             if (NodeA2 == Vector3.zero)
             {
-                DebugLog.LogToFileOnly("NodeA2 not found");
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                //DebugLog.LogToFileOnly("NodeA2 not found");
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
 
-            DebugLog.LogToFileOnly(m_pos0.ToString());
-            DebugLog.LogToFileOnly(m_pos1.ToString());
-            DebugLog.LogToFileOnly(m_pos2.ToString());
+            //DebugLog.LogToFileOnly(m_pos0.ToString());
+            //DebugLog.LogToFileOnly(m_pos1.ToString());
+            //DebugLog.LogToFileOnly(m_pos2.ToString());
 
-            DebugLog.LogToFileOnly(NodeA1.ToString());
-            DebugLog.LogToFileOnly(NodeB1.ToString());
-            DebugLog.LogToFileOnly(NodeB2.ToString());
-            DebugLog.LogToFileOnly(NodeA2.ToString());
+            //DebugLog.LogToFileOnly(NodeA1.ToString());
+            //DebugLog.LogToFileOnly(NodeB1.ToString());
+            //DebugLog.LogToFileOnly(NodeB2.ToString());
+            //DebugLog.LogToFileOnly(NodeA2.ToString());
 
-            DebugLog.LogToFileOnly(NodeA1Dir.ToString());
-            DebugLog.LogToFileOnly(NodeB1Dir.ToString());
-            DebugLog.LogToFileOnly(NodeB2Dir.ToString());
-            DebugLog.LogToFileOnly(NodeA2Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeA1Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeB1Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeB2Dir.ToString());
+            //DebugLog.LogToFileOnly(NodeA2Dir.ToString());
 
             int m_nodeNum = 0;
             int partANum;
@@ -1788,7 +1788,7 @@ namespace AdvancedRoadTools.UI
             else
             {
                 //partANum = -1;
-                CustomShowExtraInfo(true, "Invalid shape", pos);
+                CustomShowExtraInfo(true, Localization.Get("InvalidShape"), pos);
                 isUpdate = true;
                 return;
             }
@@ -2146,7 +2146,7 @@ namespace AdvancedRoadTools.UI
             }
             else if (CheckYRoadVaild(node0) == "False")
             {
-                CustomShowExtraInfo(true, "This Node is available", pos);
+                //CustomShowExtraInfo(true, "This Node is available", pos);
             }
         }
     }

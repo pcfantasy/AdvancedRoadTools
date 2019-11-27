@@ -1,0 +1,31 @@
+﻿HotKeyAdd	Increase Radius/LeftWidth/RoadWidth
+HotKeyMinus	Decrease Radius/LeftWidth/RoadWidth
+HotKeyRise	Increase Height/RightWidth/RoadLength
+HotKeyLower	Height/RightWidth/RoadLength
+HotKeyBuild	Build
+HotKeyLaterBuild	LaterBuild
+HotKeyClear	Clear
+ChangeRoundCenter	Can change round center now.
+Radius	radius = 
+Height	height = 
+ConstructionFee	Need construction Fee = 
+STEP0	Please select start node
+STEP0ERROR	This Node is available
+3ROUNDSTEP1	Please select round centre and adjust radius = 
+YROADSTEP1	Please select left added width = 
+RightAddedWidth	right added width = 
+1ROUNDSTEP1	Please select post start node for start direction
+NOMONEY	Do not have enough money
+3ROUNDSTEP2	Please select end node.
+YROADSTEP2Single	Please select leftRoadWidth.
+YROADSTEP2Dual	Please select mainRoadWidth.
+1ROUNDSTEP2	Please select end node.
+MainRoadWidth	mainRoadWidth = 
+RightLeftRoadWidth	rightRoadWidth&leftRoadWidth
+RoadLength	RoadLength = 
+RightRoadWidth	rightRoadWidth = 
+LeftRoadWidth	leftRoadWidth = 
+InvalidShape	Invalid shape
+ShortCut	ShortCut
+OtherOption	Other Option
+NeedMoney	Need money to build road
