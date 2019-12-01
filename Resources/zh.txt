@@ -1,0 +1,31 @@
+﻿HotKeyAdd	增加圆半径/左侧加宽宽度/路宽度
+HotKeyMinus	减少圆半径/左侧加宽宽度/路宽度
+HotKeyRise	增加高度/右侧加宽宽度/路长度
+HotKeyLower	减少高度/右侧加宽宽度/路长度
+HotKeyBuild	修建
+HotKeyLaterBuild	稍后修建
+HotKeyClear	清除所有
+ChangeRoundCenter	可以改变圆心等参数
+Radius	圆半径 =  
+Height	高度 = 
+ConstructionFee	需要的修建费用 = 
+STEP0	请选择一个起始NODE
+STEP0ERROR	这个NODE不可用
+3ROUNDSTEP1	请选择圆心并调整半径 = 
+YROADSTEP1	请选择左侧增加的宽度 = 
+RightAddedWidth	右侧增加的宽度 = 
+1ROUNDSTEP1	请选择起始NODE后面的NODE用于确定方向
+NOMONEY	没足够的钱
+3ROUNDSTEP2	请选择结束的NODE
+YROADSTEP2Single	请选择左侧道路宽度.
+YROADSTEP2Dual	请选择中间道路宽度.
+1ROUNDSTEP2	请选择结束的NODE.
+MainRoadWidth	中间道路宽度 = 
+RightLeftRoadWidth	左侧右侧道路宽度 =
+RoadLength	道路长度 = 
+RightRoadWidth	右侧道路宽度 = 
+LeftRoadWidth	左侧道路宽度 = 
+InvalidShape	不可用的形状
+ShortCut	快捷键
+OtherOption	其它选项
+NeedMoney	修路需要钱

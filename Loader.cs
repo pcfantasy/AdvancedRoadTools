@@ -18,6 +18,22 @@ namespace AdvancedRoadTools
 {
     public class Loader : LoadingExtensionBase
     {
+        /*public class Detour
+        {
+            public MethodInfo OriginalMethod;
+            public MethodInfo CustomMethod;
+            public RedirectCallsState Redirect;
+
+            public Detour(MethodInfo originalMethod, MethodInfo customMethod)
+            {
+                this.OriginalMethod = originalMethod;
+                this.CustomMethod = customMethod;
+                this.Redirect = RedirectionHelper.RedirectCalls(originalMethod, customMethod);
+            }
+        }*/
+
+        //public static List<Detour> Detours { get; set; }
+        public static bool DetourInited = false;
         public static UIView parentGuiView;
         public static LoadMode CurrentLoadMode;
         public static bool isGuiRunning = false;

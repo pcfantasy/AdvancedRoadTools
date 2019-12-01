@@ -36,16 +36,14 @@ namespace AdvancedRoadTools.UI
                     AdvancedTools.instance.enabled = true;
                     AdvancedTools.m_step = 0;
                     AdvancedTools.rampMode = 1;
-                    //AdvancedTools.leftAddWidth = 0;
-                    //AdvancedTools.rightAddWidth = 0;
-                    //AdvancedTools.mainRoadWidth = 16;
-                    //AdvancedTools.roadLength = 16;
+                    AdvancedTools.height = 0;
                 }
                 else
                 {
                     ToolsModifierControl.SetTool<DefaultTool>();
                     AdvancedTools.instance.enabled = false;
                     AdvancedTools.m_step = 0;
+                    AdvancedTools.height = 0;
                 }
             };
         }

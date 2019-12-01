@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Resources\zh.txt" />
     <Content Include="Resources\en.txt" />
     <Content Include="Resources\Icon.png" />
   </ItemGroup>
