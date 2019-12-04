@@ -2309,7 +2309,7 @@ namespace AdvancedRoadTools.UI
                         {
                             var height = m_pos1.y - (heightDiff * (BezierDistance(partALegacy, 0, p1)) / totalDistance);
                             var position = new Vector3(partA.Position(p1).x, height, partA.Position(p1).z);
-                            CreateNode(out node[i], ref rand, netInfo, position);
+                            CreateNodeDontFollowTerrain(out node[i], ref rand, netInfo, position);
                         }
 
                         if (i == 0)
@@ -2317,7 +2317,7 @@ namespace AdvancedRoadTools.UI
                             var tmpElevationMin = 0f;
                             var tmpElevationMax = 0f;
                             var startDir = VectorUtils.NormalizeXZ(m_pos1 - m_pos0);
-                            if (OptionUI.isSmoothMode)
+                            if (!OptionUI.isSmoothMode)
                             {
                                 if (Singleton<NetManager>.instance.m_nodes.m_buffer[m_node1].m_flags.IsFlagSet(NetNode.Flags.Underground))
                                 {
@@ -2490,7 +2490,7 @@ namespace AdvancedRoadTools.UI
                 float tmp = (float)partENum / (float)(partENum + 1);
                 var tmpElevationMin = 0f;
                 var tmpElevationMax = 0f;
-                if (OptionUI.isSmoothMode)
+                if (!OptionUI.isSmoothMode)
                 {
                     if (Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_flags.IsFlagSet(NetNode.Flags.Underground))
                     {
