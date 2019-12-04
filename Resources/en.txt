@@ -29,3 +29,4 @@ InvalidShape	Invalid shape
 ShortCut	ShortCut
 OtherOption	Other Option
 NeedMoney	Need money to build road
+SMOOTHMODE	(smooth from start to end)

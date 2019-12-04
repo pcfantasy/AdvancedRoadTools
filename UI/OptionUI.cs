@@ -14,6 +14,7 @@ namespace AdvancedRoadTools.UI
     public class OptionUI : MonoBehaviour
     {
         public static bool isMoneyNeeded = false;
+        public static bool isSmoothMode = false;
         public static void makeSettings(UIHelperBase helper)
         {
             // tabbing code is borrowed from RushHour mod

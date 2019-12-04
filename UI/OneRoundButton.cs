@@ -6,7 +6,6 @@ namespace AdvancedRoadTools.UI
 {
     public class OneRoundButton : UIButton
     {
-        public RoadsPanel baseBuildingWindow;
         public override void Start()
         {
             name = "OneRoundButton";
@@ -15,8 +14,6 @@ namespace AdvancedRoadTools.UI
             atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
             normalBgSprite = "1Round";
             hoveredBgSprite = "1Round_S";
-            focusedBgSprite = "1Round_S";
-            pressedBgSprite = "1Round_S";
             size = new Vector2(30f, 30f);
             zOrder = 11;
             eventClick += delegate (UIComponent component, UIMouseEventParameter eventParam)
@@ -48,15 +45,15 @@ namespace AdvancedRoadTools.UI
                 }
             };
         }
-        public override void Update()
+        public void OnGUI()
         {
-            base.Update();
+            //base.Update();
             if (!isVisible)
             {
                 ToolBase currentTool = ToolsModifierControl.GetCurrentTool<ToolBase>();
                 if ((currentTool != null) && (currentTool is NetTool))
                 {
-                    DebugLog.LogToFileOnly("try show");
+                    //DebugLog.LogToFileOnly("try show");
                     Show();
                 }
             }

@@ -14,8 +14,6 @@ namespace AdvancedRoadTools.UI
             atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
             normalBgSprite = "YRoad";
             hoveredBgSprite = "YRoad_S";
-            focusedBgSprite = "YRoad_S";
-            pressedBgSprite = "YRoad_S";
             size = new Vector2(30f, 30f);
             zOrder = 11;
             eventClick += delegate (UIComponent component, UIMouseEventParameter eventParam)
@@ -48,15 +46,15 @@ namespace AdvancedRoadTools.UI
             };
         }
 
-        public override void Update()
+        public void OnGUI()
         {
-            base.Update();
+            //base.Update();
             if (!isVisible)
             {
                 ToolBase currentTool = ToolsModifierControl.GetCurrentTool<ToolBase>();
                 if ((currentTool != null) && (currentTool is NetTool))
                 {
-                    DebugLog.LogToFileOnly("try show");
+                    //DebugLog.LogToFileOnly("try show");
                     Show();
                 }
             }

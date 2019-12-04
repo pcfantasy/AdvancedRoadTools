@@ -65,6 +65,7 @@
     <Compile Include="Loader.cs" />
     <Compile Include="NewData\CustomNetSegment.cs" />
     <Compile Include="Threading.cs" />
+    <Compile Include="UI\SmoothButton.cs" />
     <Compile Include="UI\YRoadButton.cs" />
     <Compile Include="Util\DebugLog.cs" />
     <Compile Include="Util\Localization.cs" />
@@ -79,16 +80,20 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Resources\ru.txt" />
     <Content Include="Resources\zh.txt" />
     <Content Include="Resources\en.txt" />
     <Content Include="Resources\Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rd /q /s "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\AdvancedRoadTools
-mkdir "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\AdvancedRoadTools
-copy "D:\Mod\AdvancedRoadTools\bin\Release\AdvancedRoadTools.dll"  "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\AdvancedRoadTools\AdvancedRoadTools.dll
-mkdir "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\\AdvancedRoadTools\Resources"
-copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\AdvancedRoadTools\Resources"</PostBuildEvent>
+    <PostBuildEvent>copy "D:\Mod\AdvancedRoadTools\bin\Release\AdvancedRoadTools.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\AdvancedRoadTools.dll
+rd /q /s "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
+mkdir "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
+copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
