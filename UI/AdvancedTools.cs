@@ -1150,7 +1150,7 @@ namespace AdvancedRoadTools.UI
                 partA.a = m_pos0;
                 partA.d = new Vector3(NodeA1.x, m_pos0.y - (partALength * heightDiff / totalDistance), NodeA1.z);
                 CustomNetSegment.CalculateMiddlePoints(m_pos0, NormilizeWithHeight(orgStartDir, partA.d.y - partA.a.y), partA.d, -NormilizeWithHeight(NodeA1Dir, partA.d.y - partA.a.y), true, true, out partA.b, out partA.c);
-                partB.a = new Vector3(NodeA1.x, m_pos0.y - (partALength * heightDiff / totalDistance), NodeA1.z); ;
+                partB.a = new Vector3(NodeA1.x, m_pos0.y - (partALength * heightDiff / totalDistance), NodeA1.z);
                 partB.d = new Vector3(NodeB1.x, m_pos0.y - ((partALength + partBLength) * heightDiff / totalDistance), NodeB1.z);
                 CustomNetSegment.CalculateMiddlePoints(partB.a, NormilizeWithHeight(NodeA1Dir, partB.d.y - partB.a.y), partB.d, -NormilizeWithHeight(NodeB1Dir, partB.d.y - partB.a.y), true, true, out partB.b, out partB.c);
                 if (!rightTurn)
@@ -1167,12 +1167,12 @@ namespace AdvancedRoadTools.UI
                 }
                 else
                 {
-                    partB.a = NodeA1;
-                    partB.d = NodeA2;
-                    CustomNetSegment.CalculateMiddlePoints(NodeA1, VectorUtils.NormalizeXZ(NodeA1Dir), NodeA2, -VectorUtils.NormalizeXZ(NodeA2Dir), true, true, out partB.b, out partB.c);
-                    partE.a = NodeA2;
+                    partB.a = new Vector3(NodeA1.x, m_pos0.y - (partALength * heightDiff / totalDistance), NodeA1.z);
+                    partB.d = new Vector3(NodeA2.x, m_pos0.y - ((partALength + partBLength) * heightDiff / totalDistance), NodeA2.z);
+                    CustomNetSegment.CalculateMiddlePoints(partB.a, NormilizeWithHeight(NodeA1Dir, partB.d.y - partB.a.y), partB.d, -NormilizeWithHeight(NodeA2Dir, partB.d.y - partB.a.y), true, true, out partB.b, out partB.c);
+                    partE.a = new Vector3(NodeA2.x, m_pos0.y - ((partALength + partBLength) * heightDiff / totalDistance), NodeA2.z);
                     partE.d = m_pos2;
-                    CustomNetSegment.CalculateMiddlePoints(NodeA2, VectorUtils.NormalizeXZ(NodeA2Dir), m_pos2, -endDir, true, true, out partE.b, out partE.c);
+                    CustomNetSegment.CalculateMiddlePoints(partE.a, NormilizeWithHeight(NodeA2Dir, partE.d.y - partE.a.y), m_pos2, -NormilizeWithHeight(orgEndDir, partE.d.y - partE.a.y), true, true, out partE.b, out partE.c);
                 }
             }
 
@@ -1838,7 +1838,7 @@ namespace AdvancedRoadTools.UI
                 float p = (float)i / (float)(255);
                 var dir = VectorUtils.NormalizeXZ(partA.Tangent(p));
                 dir.y = 0;
-                var distance = Vector3.Distance(startDir, dir);
+                var distance = Vector2.Distance(VectorUtils.XZ(startDir), VectorUtils.XZ(dir));
                 if (distance < 0.1f)
                 {
                     if (distance < tmpDistance)
@@ -1855,7 +1855,7 @@ namespace AdvancedRoadTools.UI
                 float p = (float)i / (float)(255);
                 var dir = VectorUtils.NormalizeXZ(partB.Tangent(p));
                 dir.y = 0;
-                var distance = Vector3.Distance(startDir, dir);
+                var distance = Vector2.Distance(VectorUtils.XZ(startDir), VectorUtils.XZ(dir));
                 if (distance < 0.1f)
                 {
                     if (distance < tmpDistance)
@@ -1872,7 +1872,7 @@ namespace AdvancedRoadTools.UI
                 float p = (float)i / (float)(255);
                 var dir = VectorUtils.NormalizeXZ(partC.Tangent(p));
                 dir.y = 0;
-                var distance = Vector3.Distance(startDir, dir);
+                var distance = Vector2.Distance(VectorUtils.XZ(startDir), VectorUtils.XZ(dir));
                 if (distance < 0.1f)
                 {
                     if (distance < tmpDistance)
@@ -1889,7 +1889,7 @@ namespace AdvancedRoadTools.UI
                 float p = (float)i / (float)(255);
                 var dir = VectorUtils.NormalizeXZ(partD.Tangent(p));
                 dir.y = 0;
-                var distance = Vector3.Distance(startDir, dir);
+                var distance = Vector2.Distance(VectorUtils.XZ(startDir), VectorUtils.XZ(dir));
                 if (distance < 0.1f)
                 {
                     if (distance < tmpDistance)
@@ -2011,8 +2011,8 @@ namespace AdvancedRoadTools.UI
                 var point = pos1 + 8 * i * dir1;
                 var point1 = point + (8 * radius * dir3) + (8 * radius * dir4);
                 var tmpDir = VectorUtils.NormalizeXZ(pos3 - point1);
-                var distance = Vector3.Distance(tmpDir, dir2);
-                if (distance < 0.3f)
+                var distance = Vector2.Distance(VectorUtils.XZ(tmpDir), VectorUtils.XZ(dir2));
+                if (distance < 0.1f)
                 {
                     if (distance < tmpDistance)
                     {
@@ -2045,7 +2045,7 @@ namespace AdvancedRoadTools.UI
                 var point = pos1 + 8 * i * dir1;
                 var point1 = point + (8 * radius * dir3) + (8 * radius * dir4);
                 var tmpDir = VectorUtils.NormalizeXZ(pos3 - point1);
-                var distance = Vector3.Distance(tmpDir, dir2);
+                var distance = Vector2.Distance(VectorUtils.XZ(tmpDir), VectorUtils.XZ(dir2));
                 if (distance < 0.3f)
                 {
                     if (distance < tmpDistance1)
@@ -2184,7 +2184,7 @@ namespace AdvancedRoadTools.UI
 
             int m_nodeNum = 0;
             int partANum;
-            if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.2f)
+            if (Vector2.Distance(VectorUtils.XZ(VectorUtils.NormalizeXZ(m_pos1 - m_pos0)), VectorUtils.XZ(VectorUtils.NormalizeXZ(NodeA1 - m_pos1))) < 0.1f)
             {
                 partANum = (int)(Vector2.Distance(VectorUtils.XZ(m_pos1), VectorUtils.XZ(NodeA1)) / 64f);
             }
@@ -2550,7 +2550,7 @@ namespace AdvancedRoadTools.UI
                 if (!OptionUI.isSmoothMode)
                 {
                     //if (m_elevation == 0) m_elevation = 1;
-                    if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.2f)
+                    if (Vector2.Distance(VectorUtils.XZ(VectorUtils.NormalizeXZ(m_pos1 - m_pos0)), VectorUtils.XZ(VectorUtils.NormalizeXZ(NodeA1 - m_pos1))) < 0.1f)
                     {
                         RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partA.Position(0), m_elevation + 1f), FollowTerrain(partA.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
                     }
@@ -2561,7 +2561,7 @@ namespace AdvancedRoadTools.UI
                 }
                 else
                 {
-                    if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.2f)
+                    if (Vector2.Distance(VectorUtils.XZ(VectorUtils.NormalizeXZ(m_pos1 - m_pos0)), VectorUtils.XZ(VectorUtils.NormalizeXZ(NodeA1 - m_pos1))) < 0.1f)
                     {
                         RenderSegment(netInfo, NetSegment.Flags.All, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
                     }

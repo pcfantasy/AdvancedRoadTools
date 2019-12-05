@@ -29,4 +29,4 @@ InvalidShape	Неправильная форма
 ShortCut	Горячие клавиши
 OtherOption	Дополнительные настройки
 NeedMoney	Нужны деньги, чтобы построить дорогу
-SMOOTHMODE	(smooth from start to end)
+SMOOTHMODE	(Плавный игиб дороги)
