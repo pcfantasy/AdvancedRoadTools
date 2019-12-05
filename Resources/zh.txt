@@ -22,7 +22,7 @@ YROADSTEP2Dual	请选择中间道路宽度.
 1ROUNDSTEP2	请选择结束的NODE.
 MainRoadWidth	中间道路宽度 = 
 RightLeftRoadWidth	左侧右侧道路宽度 =
-RoadLength	道路长度 = 
+RoadGaps	道路之间间隔 = 
 RightRoadWidth	右侧道路宽度 = 
 LeftRoadWidth	左侧道路宽度 = 
 InvalidShape	不可用的形状
@@ -30,3 +30,4 @@ ShortCut	快捷键
 OtherOption	其它选项
 NeedMoney	修路需要钱
 SMOOTHMODE	(从起点到终点顺滑)
+CurrentRoadWidth	目前的道路宽度= 

@@ -22,7 +22,7 @@ YROADSTEP2Dual	Please select mainRoadWidth.
 1ROUNDSTEP2	Please select end node.
 MainRoadWidth	mainRoadWidth = 
 RightLeftRoadWidth	rightRoadWidth&leftRoadWidth
-RoadLength	RoadLength = 
+RoadGaps	road gaps = 
 RightRoadWidth	rightRoadWidth = 
 LeftRoadWidth	leftRoadWidth = 
 InvalidShape	Invalid shape
@@ -30,3 +30,4 @@ ShortCut	ShortCut
 OtherOption	Other Option
 NeedMoney	Need money to build road
 SMOOTHMODE	(smooth from start to end)
+CurrentRoadWidth	Current RoadWidth = 
