@@ -30,4 +30,4 @@ ShortCut	快捷键
 OtherOption	其它选项
 NeedMoney	修路需要钱
 SMOOTHMODE	(从起点到终点顺滑)
-CurrentRoadWidth	目前的道路宽度= 
+CurrentRoadWidth	目前的道路宽度 = 
