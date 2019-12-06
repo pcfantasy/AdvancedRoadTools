@@ -1,7 +1,7 @@
 ﻿HotKeyAdd	Increase Radius/LeftWidth/RoadWidth
 HotKeyMinus	Decrease Radius/LeftWidth/RoadWidth
-HotKeyRise	Increase Height/RightWidth/RoadLength
-HotKeyLower	Height/RightWidth/RoadLength
+HotKeyRise	Increase Height/RightWidth/RoadGaps
+HotKeyLower	Decrease Height/RightWidth/RoadGaps
 HotKeyBuild	Build
 HotKeyLaterBuild	LaterBuild
 HotKeyClear	Clear
