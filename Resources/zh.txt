@@ -1,7 +1,7 @@
 ﻿HotKeyAdd	增加圆半径/左侧加宽宽度/路宽度
 HotKeyMinus	减少圆半径/左侧加宽宽度/路宽度
-HotKeyRise	增加高度/右侧加宽宽度/路长度
-HotKeyLower	减少高度/右侧加宽宽度/路长度
+HotKeyRise	增加高度/右侧加宽宽度/道路间隔
+HotKeyLower	减少高度/右侧加宽宽度/道路间隔
 HotKeyBuild	修建
 HotKeyLaterBuild	稍后修建
 HotKeyClear	清除所有
