@@ -3,7 +3,7 @@ HotKeyMinus	Disminuir Radio/Ancho izquierdo/Ancho de la carretera
 HotKeyRise	Incrementar Altura/Ancho derecho/Abertura de la carretera
 HotKeyLower	Disminuir Altura/Ancho derecho/Abertura de la carretera
 HotKeyBuild	Construir
-HotKeyLaterBuild	LaterBuild
+HotKeyLaterBuild	Construir luego
 HotKeyClear	Borrar
 ChangeRoundCenter	Puedes cambiar el circulo central ahora.
 Radius	radio = 
