@@ -292,13 +292,13 @@ namespace AdvancedRoadTools.UI
                             cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
                             long _cashAmount = (long)cashAmount.GetValue(Singleton<EconomyManager>.instance);
 
-                            if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded)
+                            if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                             {
                                 CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                             }
                             else
                             {
-                                if (OptionUI.isMoneyNeeded)
+                                if (OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                                     Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
 
                                 bool noNeedUpdate = false;
@@ -367,18 +367,18 @@ namespace AdvancedRoadTools.UI
                     if (rampMode!=1)
                         radius = (byte)COMath.Clamp(radius + 1, 5, 250);
                     else if (m_step == 1)
-                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 4, 0, 32);
+                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 2, 0, 32);
                     else if (m_step == 2)
-                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth + 4, 0, 32);
+                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth + 2, 0, 32);
                 }
                 if (OptionsKeymappingRoadTool.m_minus.IsPressed(e))
                 {
                     if (rampMode != 1)
                         radius = (byte)COMath.Clamp(radius - 1, 5, 250);
                     else if (m_step == 1)
-                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 4, 0, 32);
+                        leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 2, 0, 32);
                     else if (m_step == 2)
-                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth - 4, 0, 32);
+                        mainRoadWidth = (byte)COMath.Clamp(mainRoadWidth - 2, 0, 32);
                 }
                 if (OptionsKeymappingRoadTool.m_rise.IsPressed(e))
                 {
@@ -463,13 +463,13 @@ namespace AdvancedRoadTools.UI
                         cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
                         long _cashAmount = (long)cashAmount.GetValue(Singleton<EconomyManager>.instance);
 
-                        if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded)
+                        if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                         {
                             CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                         }
                         else
                         {
-                            if (OptionUI.isMoneyNeeded)
+                            if (OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                                 Singleton<EconomyManager>.instance.FetchResource(EconomyManager.Resource.Construction, currentMoney, m_netInfo.m_class);
                             if (storedNum != 255)
                             {
