@@ -1,0 +1,33 @@
+HotKeyAdd	Radius vergrößern/LinkeBreite/Straßenbreite
+HotKeyMinus	Radius verringern/LinkeBreite/Straßenbreite
+HotKeyRise	Höhe steigern/RechteBreite/Straßenlücke
+HotKeyLower	Höhe senken/RechteBreite/Straßenlücke
+HotKeyBuild	Bauen
+HotKeyLaterBuild	Später bauen
+HotKeyClear	Löschen
+ChangeRoundCenter	Die Kreismitte kann jetzt gewechselt werden.
+Radius	Radius = 
+Height	Höhe = 
+ConstructionFee	Benötigte Konstruktionskosten = 
+STEP0	Wähle einen Netzknotenpunkt zum starten aus
+STEP0ERROR	Dieser Netzknotenpunkt ist verfügbar
+3ROUNDSTEP1	Wähle eine Kreismitte und passe den Radius an = 
+YROADSTEP1	Wähle die nach links hinzugefügte Breite aus = 
+RightAddedWidth	Nach rechts hinzugefügte Breite  = 
+1ROUNDSTEP1	Wähle den nächsten Netzknotenpunkt für die Startrichtung aus
+NOMONEY	Du hast nicht genug Geld
+3ROUNDSTEP2	Wähle einen Endnetzknotenpunkt aus.
+YROADSTEP2Single	Wähle die linke Straßenbreite aus.
+YROADSTEP2Dual	Wähle die mittige Straßenbreite aus.
+1ROUNDSTEP2	Wähle einen Endnetzknotenpunkt aus.
+MainRoadWidth	Mittige Straßenbreite = 
+RightLeftRoadWidth	Rechte- und linke Straßenbreite
+RoadGaps	Straßenlücken = 
+RightRoadWidth	Rechte Straßenbreite = 
+LeftRoadWidth	Linke Straßenbreite =
+InvalidShape	Ungültige Form
+ShortCut	Abkürzung
+OtherOption	Andere Optionen
+NeedMoney	Benötigt Geld zum Bau der Straße
+SMOOTHMODE	(Glätten vom Startnetzknotenpunkt bis Endnetzknotenpunkt)
+CurrentRoadWidth	Aktuelle Straßenbreite =
