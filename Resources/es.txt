@@ -1,0 +1,33 @@
+﻿HotKeyAdd	Incrementar Radio/Ancho izquierdo/Ancho de la carretera
+HotKeyMinus	Disminuir Radio/Ancho izquierdo/Ancho de la carretera
+HotKeyRise	Incrementar Altura/Ancho derecho/Abertura de la carretera
+HotKeyLower	Disminuir Altura/Ancho derecho/Abertura de la carretera
+HotKeyBuild	Construir
+HotKeyLaterBuild	LaterBuild
+HotKeyClear	Borrar
+ChangeRoundCenter	Puedes cambiar el circulo central ahora.
+Radius	radio = 
+Height	altura = 
+ConstructionFee	Costo de construcción = 
+STEP0	Selecciona el nodo incial
+STEP0ERROR	El nodo está disponible
+3ROUNDSTEP1	Selecciona el círculo central y ajusta el radio = 
+YROADSTEP1	Selecciona el ancho izquierdo adicional = 
+RightAddedWidth	ancho derecho adicional = 
+1ROUNDSTEP1	Selecciona el siguiente nodo para la dirección inicial
+NOMONEY	No tienes suficiente dinero
+3ROUNDSTEP2	Selecciona el nodo final.
+YROADSTEP2Single	Selecciona el ancho de la carretera izquierda.
+YROADSTEP2Dual	Selecciona el ancho de la carretera principal.
+1ROUNDSTEP2	Selecciona el nodo final.
+MainRoadWidth	Ancho de la carretera principal = 
+RightLeftRoadWidth	Ancho de la carretera derecha y Ancho de la carretera izquierda = 
+RoadGaps	abertura de carreteras = 
+RightRoadWidth	Ancho de la carretera derecha = 
+LeftRoadWidth	Ancho de la carretera izquierda = 
+InvalidShape	Figura inválida
+ShortCut	Configuración de teclas
+OtherOption	Opciones Adicionales
+NeedMoney	Necesitas dinero para contruir la carretera
+SMOOTHMODE	(liso de inicio a fin)
+CurrentRoadWidth	Ancho de la carretera actual = 
