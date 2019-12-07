@@ -1,0 +1,33 @@
+HotKeyAdd	Augmentez le rayon/LargeurGauche/Largeur de route
+HotKeyMinus	Réduisez le rayon/LargeurGauche/Largeur de route
+HotKeyRise	Augmenter la hauteur/LargeurDroite/Espace entre les rues
+HotKeyLower	Baisser la hauteur/LargeurDroite/Espace entre les rues
+HotKeyBuild	Construire
+HotKeyLaterBuild	Construire plus tard
+HotKeyClear	Supprimer
+ChangeRoundCenter	Le centre du cercle peut maintenant être changé.
+Radius	Rayon = 
+Height	Hauteur = 
+ConstructionFee	Coûts de construction requis = 
+STEP0	Sélectionnez un nœud de réseau pour démarrer
+STEP0ERROR	Ce nœud de réseau est disponible
+3ROUNDSTEP1	Choisissez un centre de cercle et ajustez le rayon = 
+YROADSTEP1	Sélectionnez la largeur ajoutée à gauche = 
+RightAddedWidth	Largeur ajoutée à droite  = 
+1ROUNDSTEP1	Sélectionnez le prochain nœud de réseau pour la direction de départ
+NOMONEY	Vous n'avez pas assez d'argent
+3ROUNDSTEP2	Sélectionnez un nœud de réseau final.
+YROADSTEP2Single	Sélectionnez la largeur de route gauche.
+YROADSTEP2Dual	Sélectionnez la largeur de rue centrale.
+1ROUNDSTEP2	Sélectionnez un nœud de réseau final.
+MainRoadWidth	Largeur de rue centrale = 
+RightLeftRoadWidth	Largeur de route droite et gauche
+RoadGaps	Les espaces entre les rues = 
+RightRoadWidth	Largeur rue droite = 
+LeftRoadWidth	Largeur de route gauche =
+InvalidShape	Formulaire invalide
+ShortCut	Raccourci
+OtherOption	Autres options
+NeedMoney	A besoin d'argent pour la construction de la route
+SMOOTHMODE	(Lisse du nœud de réseau de départ au nœud de fin)
+CurrentRoadWidth	Largeur actuelle de la route =
