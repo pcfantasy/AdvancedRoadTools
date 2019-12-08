@@ -26,8 +26,8 @@ RoadGaps	Les espaces entre les rues =
 RightRoadWidth	Largeur rue droite = 
 LeftRoadWidth	Largeur de route gauche =
 InvalidShape	Formulaire invalide
-ShortCut	Raccourci
-OtherOption	Autres options
+ShortCut	Raccourcis
+OtherOption	Plus d'options
 NeedMoney	A besoin d'argent pour la construction de la route
 SMOOTHMODE	(Lisse du nœud de réseau de départ au nœud de fin)
 CurrentRoadWidth	Largeur actuelle de la route =
