@@ -82,6 +82,7 @@
   <ItemGroup>
     <Content Include="Resources\de.txt" />
     <Content Include="Resources\es.txt" />
+    <Content Include="Resources\fr.txt" />
     <Content Include="Resources\ru.txt" />
     <Content Include="Resources\zh.txt" />
     <Content Include="Resources\en.txt" />
