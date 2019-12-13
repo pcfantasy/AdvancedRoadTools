@@ -2633,13 +2633,13 @@ namespace AdvancedRoadTools.UI
                 float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + roadSpace;
                 float leftOffset = 0;
                 float rightOffset = 0;
-                if ((leftOffset == 0) && (rightOffset != 0))
+                if ((leftAddWidth == 0) && (rightAddWidth != 0))
                 {
                     //left position is fixed, right position will be affect by roadspace
                     leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth - mainRoadWidth / 2f;
                     rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth + roadSpace - (totalWidth - mainRoadWidth - roadSpace) / 2f;
                 }
-                else if ((leftOffset != 0) && (rightOffset == 0))
+                else if ((leftAddWidth != 0) && (rightAddWidth == 0))
                 {
                     leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth + roadSpace - mainRoadWidth / 2f;
                     rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth - (totalWidth - mainRoadWidth - roadSpace) / 2f;

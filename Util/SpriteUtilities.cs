@@ -178,6 +178,12 @@ namespace AdvancedRoadTools.Util
             pixel.b = adjacent.b;
             return true;
         }
+
+        public static void ClampRectToScreen(ref Rect rect, Vector2 resolution)
+        {
+            rect.x = Mathf.Clamp(rect.x, 0f, resolution.x - rect.width);
+            rect.y = Mathf.Clamp(rect.y, 0f, resolution.y - rect.height);
+        }
         //=========================================================================
     }
 }

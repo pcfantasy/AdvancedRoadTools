@@ -10,7 +10,14 @@ namespace AdvancedRoadTools.UI
         {
             name = "YRoadButton";
             //text = "Y";
-            relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 530f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
+            Vector2 resolution = UIView.GetAView().GetScreenResolution();
+            var pos = new Vector2((75f), (resolution.y * 4f / 5f));
+            Rect rect = new Rect(pos.x, pos.y, 30, 30);
+            SpriteUtilities.ClampRectToScreen(ref rect, resolution);
+            DebugLog.LogToFileOnly($"Setting YRoadButton position to [{pos.x},{pos.y}]");
+            absolutePosition = rect.position;
+            Invalidate();
+            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 530f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
             atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
             normalBgSprite = "YRoad";
             hoveredBgSprite = "YRoad_S";
