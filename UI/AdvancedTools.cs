@@ -365,7 +365,7 @@ namespace AdvancedRoadTools.UI
                 if (OptionsKeymappingRoadTool.m_add.IsPressed(e))
                 {
                     if (rampMode!=1)
-                        radius = (byte)COMath.Clamp(radius + 1, 5, 250);
+                        radius = (byte)COMath.Clamp(radius + 1, 4, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 2, 0, 32);
                     else if (m_step == 2)
@@ -374,7 +374,7 @@ namespace AdvancedRoadTools.UI
                 if (OptionsKeymappingRoadTool.m_minus.IsPressed(e))
                 {
                     if (rampMode != 1)
-                        radius = (byte)COMath.Clamp(radius - 1, 5, 250);
+                        radius = (byte)COMath.Clamp(radius - 1, 4, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 2, 0, 32);
                     else if (m_step == 2)
@@ -385,7 +385,7 @@ namespace AdvancedRoadTools.UI
                     if (rampMode != 1)
                         height = COMath.Clamp((int)height + 1, -32, 32);
                     else if (m_step == 1)
-                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth + 4, 0, 32);
+                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth + 2, 0, 32);
                     else if (m_step == 2)
                         roadSpace = (byte)COMath.Clamp(roadSpace + 1, 0, 4);
 
@@ -407,7 +407,7 @@ namespace AdvancedRoadTools.UI
                     if (rampMode != 1)
                         height = (float)COMath.Clamp((int)height - 1, -32, 32);
                     else if (m_step == 1)
-                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth - 4, 0, 32);
+                        rightAddWidth = (byte)COMath.Clamp(rightAddWidth - 2, 0, 32);
                     else if (m_step == 2)
                         roadSpace = (byte)COMath.Clamp(roadSpace - 1, 0, 4);
 
