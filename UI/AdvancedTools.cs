@@ -320,8 +320,8 @@ namespace AdvancedRoadTools.UI
                                     m_step = 0;
                                     CustomShowToolInfo(show: false, null, Vector3.zero);
                                     CustomShowExtraInfo(show: false, null, Vector3.zero);
-                                    ToolsModifierControl.SetTool<DefaultTool>();
-                                    enabled = false;
+                                    //ToolsModifierControl.SetTool<DefaultTool>();
+                                    //enabled = false;
                                     updateRoundMode = false;
                                     currentMoney = 0;
                                 }
