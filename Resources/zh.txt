@@ -31,3 +31,4 @@ OtherOption	其它选项
 NeedMoney	修路需要钱
 SMOOTHMODE	(从起点到终点顺滑)
 CurrentRoadWidth	目前的道路宽度 = 
+TRYOPTION	可以更改mod的选项，取消修路需要钱

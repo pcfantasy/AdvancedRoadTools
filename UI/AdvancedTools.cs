@@ -294,7 +294,7 @@ namespace AdvancedRoadTools.UI
 
                             if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                             {
-                                CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
+                                //CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                             }
                             else
                             {
@@ -327,6 +327,17 @@ namespace AdvancedRoadTools.UI
                                 }
                             }
                         }
+                        else
+                        {
+                            FieldInfo cashAmount;
+                            cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
+                            long _cashAmount = (long)cashAmount.GetValue(Singleton<EconomyManager>.instance);
+
+                            if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
+                            {
+                                CustomShowExtraInfo(true, Localization.Get("NOMONEY") + "\n" + Localization.Get("TRYOPTION"), pos);
+                            }
+                        }
                     }
                     else
                     {
@@ -336,22 +347,48 @@ namespace AdvancedRoadTools.UI
 
                     if (rampMode != 1)
                     {
-                        if (!OptionUI.isSmoothMode)
-                            CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
-                        else
-                            CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + Localization.Get("SMOOTHMODE") + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
-                    }
-                    else
-                    {
-                        if (CheckYRoadVaild(node0) == "Dual")
+                        if (OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                         {
-                            float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + 2 * roadSpace;
-                            CustomShowToolInfo(true, Localization.Get("YROADSTEP2Dual") + "\n" + Localization.Get("MainRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightLeftRoadWidth") + ((totalWidth - mainRoadWidth - 2* roadSpace) / 2f).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            if (!OptionUI.isSmoothMode)
+                                CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            else
+                                CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + Localization.Get("SMOOTHMODE") + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
                         }
                         else
                         {
-                            float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + roadSpace;
-                            CustomShowToolInfo(true, Localization.Get("YROADSTEP2Single") + "\n" + Localization.Get("LeftRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightRoadWidth") + (totalWidth - mainRoadWidth - roadSpace).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            if (!OptionUI.isSmoothMode)
+                                CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString(), output.m_hitPos);
+                            else
+                                CustomShowToolInfo(true, Localization.Get("3ROUNDSTEP2") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + Localization.Get("SMOOTHMODE"), output.m_hitPos);
+                        }
+                    }
+                    else
+                    {
+                        if (OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
+                        {
+                            if (CheckYRoadVaild(node0) == "Dual")
+                            {
+                                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + 2 * roadSpace;
+                                CustomShowToolInfo(true, Localization.Get("YROADSTEP2Dual") + "\n" + Localization.Get("MainRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightLeftRoadWidth") + ((totalWidth - mainRoadWidth - 2 * roadSpace) / 2f).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            }
+                            else
+                            {
+                                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + roadSpace;
+                                CustomShowToolInfo(true, Localization.Get("YROADSTEP2Single") + "\n" + Localization.Get("LeftRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightRoadWidth") + (totalWidth - mainRoadWidth - roadSpace).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
+                            }
+                        }
+                        else
+                        {
+                            if (CheckYRoadVaild(node0) == "Dual")
+                            {
+                                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + 2 * roadSpace;
+                                CustomShowToolInfo(true, Localization.Get("YROADSTEP2Dual") + "\n" + Localization.Get("MainRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightLeftRoadWidth") + ((totalWidth - mainRoadWidth - 2 * roadSpace) / 2f).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString(), output.m_hitPos);
+                            }
+                            else
+                            {
+                                float totalWidth = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth * 2 + leftAddWidth + rightAddWidth + roadSpace;
+                                CustomShowToolInfo(true, Localization.Get("YROADSTEP2Single") + "\n" + Localization.Get("LeftRoadWidth") + mainRoadWidth.ToString() + "\n" + Localization.Get("RightRoadWidth") + (totalWidth - mainRoadWidth - roadSpace).ToString() + "\n" + Localization.Get("RoadGaps") + roadSpace.ToString(), output.m_hitPos);
+                            }
                         }
                     }
                 }
@@ -465,7 +502,7 @@ namespace AdvancedRoadTools.UI
 
                         if ((_cashAmount < currentMoney) && OptionUI.isMoneyNeeded && ((Loader.CurrentLoadMode == ICities.LoadMode.LoadGame) || (Loader.CurrentLoadMode == ICities.LoadMode.NewGame)))
                         {
-                            CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
+                            //CustomShowExtraInfo(true, Localization.Get("NOMONEY"), pos);
                         }
                         else
                         {

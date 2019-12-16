@@ -31,3 +31,4 @@ OtherOption	Дополнительные настройки
 NeedMoney	Нужны деньги, чтобы построить дорогу
 SMOOTHMODE	(Плавный изгиб дороги)
 CurrentRoadWidth	Ширина выбранной дороги = 
+TRYOPTION	Change "Need money to build road" in mod`s option

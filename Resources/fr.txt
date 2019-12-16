@@ -30,4 +30,5 @@ ShortCut	Raccourcis
 OtherOption	Plus d'options
 NeedMoney	A besoin d'argent pour la construction de la route
 SMOOTHMODE	(Lisse du nœud de réseau de départ au nœud de fin)
-CurrentRoadWidth	Largeur actuelle de la route =
+CurrentRoadWidth	Largeur actuelle de la route = 
+TRYOPTION	Change "Need money to build road" in mod`s option

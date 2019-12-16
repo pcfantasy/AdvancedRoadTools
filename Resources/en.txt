@@ -31,3 +31,4 @@ OtherOption	Other Option
 NeedMoney	Need money to build road
 SMOOTHMODE	(smooth from start to end)
 CurrentRoadWidth	Current RoadWidth = 
+TRYOPTION	Change "Need money to build road" in mod`s option
