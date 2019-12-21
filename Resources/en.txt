@@ -31,5 +31,5 @@ OtherOption	Other Option
 NeedMoney	Need money to build road
 SMOOTHMODE	(smooth from start to end)
 CurrentRoadWidth	Current RoadWidth = 
-TRYOPTION	Change "Need money to build road" in mod`s option
+TRYOPTION	Change "Need money to build road" in mod`s option"
 NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)

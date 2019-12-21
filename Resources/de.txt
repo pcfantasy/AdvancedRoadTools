@@ -31,5 +31,5 @@ OtherOption	Weitere Optionen
 NeedMoney	Benötigt Geld zum Bau der Straße
 SMOOTHMODE	(Glätten vom Startnetzknotenpunkt bis Endnetzknotenpunkt)
 CurrentRoadWidth	Aktuelle Straßenbreite =
-TRYOPTION	Change "Need money to build road" in mod`s option
+TRYOPTION	Ändere "Benötigt Geld zum Bau der Straße" in der Mod-Option
 NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
