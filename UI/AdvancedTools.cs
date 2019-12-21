@@ -838,99 +838,18 @@ namespace AdvancedRoadTools.UI
         {
             var nm = Singleton<NetManager>.instance;
             var m_node = nm.m_nodes.m_buffer[node];
-            if (m_node.m_segment0 != 0)
+            for (int i =0; i < 8; i ++)
             {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment0].m_startNode == node)
+                if(m_node.GetSegment(i) !=0)
                 {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment0].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment0].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment0].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment1 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment1].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment1].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment1].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment1].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment2 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment2].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment2].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment2].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment2].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment3 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment3].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment3].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment3].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment3].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment4 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment4].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment4].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment4].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment4].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment5 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment5].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment5].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment5].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment5].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment6 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment6].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment6].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment6].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment6].m_endDirection;
-                }
-            }
-
-            if (m_node.m_segment7 != 0)
-            {
-                if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment7].m_startNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment7].m_startDirection;
-                }
-                else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment7].m_endNode == node)
-                {
-                    return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.m_segment7].m_endDirection;
+                    if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.GetSegment(i)].m_startNode == node)
+                    {
+                        return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.GetSegment(i)].m_startDirection;
+                    }
+                    else if (Singleton<NetManager>.instance.m_segments.m_buffer[m_node.GetSegment(i)].m_endNode == node)
+                    {
+                        return Singleton<NetManager>.instance.m_segments.m_buffer[m_node.GetSegment(i)].m_endDirection;
+                    }
                 }
             }
 
@@ -1550,7 +1469,7 @@ namespace AdvancedRoadTools.UI
                 }
             }
 
-            if (onlyShow && !onlyShowMesh)
+            if (onlyShow && !onlyShowMesh && !OptionUI.dontUseShaderPreview)
             {
                 Singleton<RenderManager>.instance.OverlayEffect.DrawBezier(cameraInfo, m_validColorInfo, partA, Mathf.Max(6f, netInfo.m_halfWidth * 2f), -100000f, -100000f, -1f, 1280f, renderLimits: false, alphaBlend: false);
                 //RenderSegment.Invoke(null, new object[] { netInfo, NetSegment.Flags.All, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true });
@@ -1573,25 +1492,25 @@ namespace AdvancedRoadTools.UI
                 if (!OptionUI.isSmoothMode)
                 {
                     //if (m_elevation == 0) m_elevation = 1;
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partA.Position(0), m_elevation + 1f), FollowTerrain(partA.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partB.Position(0), m_elevation + 1f), FollowTerrain(partB.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partA.Position(0), m_elevation + 1f), FollowTerrain(partA.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partB.Position(0), m_elevation + 1f), FollowTerrain(partB.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true);
                     if (!rightTurn)
                     {
-                        RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partC.Position(0), m_elevation + 1f), FollowTerrain(partC.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true, true);
-                        RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partD.Position(0), m_elevation + 1f), FollowTerrain(partD.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partC.Position(0), m_elevation + 1f), FollowTerrain(partC.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partD.Position(0), m_elevation + 1f), FollowTerrain(partD.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true);
                     }
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partE.Position(0), m_elevation + 1f), FollowTerrain(partE.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partE.Position(0), m_elevation + 1f), FollowTerrain(partE.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true);
                 }
                 else
                 {
-                    RenderSegment(netInfo, NetSegment.Flags.All, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, partB.Position(0), partB.Position(1), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partB.Position(0), partB.Position(1), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true);
                     if (!rightTurn)
                     {
-                        RenderSegment(netInfo, NetSegment.Flags.All, partC.Position(0), partC.Position(1), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true, true);
-                        RenderSegment(netInfo, NetSegment.Flags.All, partD.Position(0), partD.Position(1), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, partC.Position(0), partC.Position(1), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, partD.Position(0), partD.Position(1), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true);
                     }
-                    RenderSegment(netInfo, NetSegment.Flags.All, partE.Position(0), partE.Position(1), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partE.Position(0), partE.Position(1), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true);
                 }
             }
         }
@@ -2574,7 +2493,7 @@ namespace AdvancedRoadTools.UI
                 currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
             }
 
-            if (onlyShow && !onlyShowMesh)
+            if (onlyShow && !onlyShowMesh && !OptionUI.dontUseShaderPreview)
             {
                 if (Vector2.Distance(VectorUtils.NormalizeXZ(m_pos1 - m_pos0), VectorUtils.NormalizeXZ(NodeA1 - m_pos1)) < 0.2f)
                 {
@@ -2593,23 +2512,23 @@ namespace AdvancedRoadTools.UI
                     //if (m_elevation == 0) m_elevation = 1;
                     if (Vector2.Distance(VectorUtils.XZ(VectorUtils.NormalizeXZ(m_pos1 - m_pos0)), VectorUtils.XZ(VectorUtils.NormalizeXZ(NodeA1 - m_pos1))) < 0.1f)
                     {
-                        RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partA.Position(0), m_elevation + 1f), FollowTerrain(partA.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partA.Position(0), m_elevation + 1f), FollowTerrain(partA.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
                     }
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partB.Position(0), m_elevation + 1f), FollowTerrain(partB.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partC.Position(0), m_elevation + 1f), FollowTerrain(partC.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partD.Position(0), m_elevation + 1f), FollowTerrain(partD.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, FollowTerrain(partE.Position(0), m_elevation + 1f), FollowTerrain(partE.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partB.Position(0), m_elevation + 1f), FollowTerrain(partB.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partC.Position(0), m_elevation + 1f), FollowTerrain(partC.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partD.Position(0), m_elevation + 1f), FollowTerrain(partD.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, FollowTerrain(partE.Position(0), m_elevation + 1f), FollowTerrain(partE.Position(1), m_elevation + 1f), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true);
                 }
                 else
                 {
                     if (Vector2.Distance(VectorUtils.XZ(VectorUtils.NormalizeXZ(m_pos1 - m_pos0)), VectorUtils.XZ(VectorUtils.NormalizeXZ(NodeA1 - m_pos1))) < 0.1f)
                     {
-                        RenderSegment(netInfo, NetSegment.Flags.All, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true, true);
+                        RenderSegment(netInfo, NetSegment.Flags.None, partA.Position(0), partA.Position(1), VectorUtils.NormalizeXZ(partA.Tangent(0)), VectorUtils.NormalizeXZ(partA.Tangent(1)), true, true);
                     }
-                    RenderSegment(netInfo, NetSegment.Flags.All, partB.Position(0), partB.Position(1), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, partC.Position(0), partC.Position(1), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, partD.Position(0), partD.Position(1), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true, true);
-                    RenderSegment(netInfo, NetSegment.Flags.All, partE.Position(0), partE.Position(1), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partB.Position(0), partB.Position(1), VectorUtils.NormalizeXZ(partB.Tangent(0)), VectorUtils.NormalizeXZ(partB.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partC.Position(0), partC.Position(1), VectorUtils.NormalizeXZ(partC.Tangent(0)), VectorUtils.NormalizeXZ(partC.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partD.Position(0), partD.Position(1), VectorUtils.NormalizeXZ(partD.Tangent(0)), VectorUtils.NormalizeXZ(partD.Tangent(1)), true, true);
+                    RenderSegment(netInfo, NetSegment.Flags.None, partE.Position(0), partE.Position(1), VectorUtils.NormalizeXZ(partE.Tangent(0)), VectorUtils.NormalizeXZ(partE.Tangent(1)), true, true);
                 }
             }
         }
@@ -2713,7 +2632,7 @@ namespace AdvancedRoadTools.UI
                 {
                     if (showMesh)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true, false);
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true);
                         //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
                     }
                     else
@@ -2735,7 +2654,7 @@ namespace AdvancedRoadTools.UI
                 {
                     if (showMesh)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true, false);
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true);
                         //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
                         //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
                     }
@@ -2758,7 +2677,7 @@ namespace AdvancedRoadTools.UI
                 {
                     if (showMesh)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true, false);
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
                         //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
                     }
                     else
@@ -2780,7 +2699,7 @@ namespace AdvancedRoadTools.UI
                 {
                     if (showMesh)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true, false);
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
                         //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
                     }
                     else
@@ -2826,7 +2745,7 @@ namespace AdvancedRoadTools.UI
                 }
                 if (showMesh)
                 {
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true, false);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true);
                     //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
                     //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
                 }
@@ -2846,7 +2765,7 @@ namespace AdvancedRoadTools.UI
                 }
                 if (showMesh)
                 {
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true, false);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true);
                     //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
                 }
                 else
@@ -2865,7 +2784,7 @@ namespace AdvancedRoadTools.UI
                 }
                 if (showMesh)
                 {
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true, false);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
                     //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
                 }
                 else
@@ -2884,7 +2803,7 @@ namespace AdvancedRoadTools.UI
                 }
                 if (showMesh)
                 {
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true, false);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
                     //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
                 }
                 else
@@ -2907,7 +2826,7 @@ namespace AdvancedRoadTools.UI
                 }
                 if (showMesh)
                 {
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment6].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node6Pos, ele + 1f), startDir, startDir, true, true, false);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment6].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node6Pos, ele + 1f), startDir, startDir, true, true);
                     //RenderNode(netInfo, FollowTerrain(node6Pos, ele + 1f), startDir);
                 }
                 else
@@ -2921,7 +2840,7 @@ namespace AdvancedRoadTools.UI
             }
         }
 
-        public static void RenderSegment(NetInfo info, NetSegment.Flags flags, Vector3 startPosition, Vector3 endPosition, Vector3 startDirection, Vector3 endDirection, bool smoothStart, bool smoothEnd, bool isBezierPreview)
+        public static void RenderSegment(NetInfo info, NetSegment.Flags flags, Vector3 startPosition, Vector3 endPosition, Vector3 startDirection, Vector3 endDirection, bool smoothStart, bool smoothEnd)
         {
             if (info.m_segments != null)
             {
@@ -2964,7 +2883,7 @@ namespace AdvancedRoadTools.UI
                     NetInfo.Segment segment = info.m_segments[i];
                     if (segment.CheckFlags(flags, out bool turnAround))
                     {
-                        if (turnAround != flag && !(isBezierPreview))
+                        if (turnAround != flag)
                         {
                             value3.x = 0f - value3.x;
                             value3.y = 0f - value3.y;

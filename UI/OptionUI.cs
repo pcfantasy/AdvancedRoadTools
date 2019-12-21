@@ -15,6 +15,7 @@ namespace AdvancedRoadTools.UI
     {
         public static bool isMoneyNeeded = false;
         public static bool isSmoothMode = false;
+        public static bool dontUseShaderPreview = false;
         public static void makeSettings(UIHelperBase helper)
         {
             // tabbing code is borrowed from RushHour mod
@@ -54,6 +55,7 @@ namespace AdvancedRoadTools.UI
 
             var generalGroup1 = panelHelper.AddGroup(Localization.Get("OtherOption")) as UIHelper;
             generalGroup1.AddCheckbox(Localization.Get("NeedMoney"), isMoneyNeeded, (index) => isMoneyNeededEnable(index));
+            generalGroup1.AddCheckbox(Localization.Get("NOSHADERPREVIEW"), dontUseShaderPreview, (index) => dontUseShaderPreviewEnable(index));
             SaveSetting();
 
             // Function_ShortCut
@@ -101,6 +103,7 @@ namespace AdvancedRoadTools.UI
             FileStream fs = File.Create("AdvancedRoadTools_setting.txt");
             StreamWriter streamWriter = new StreamWriter(fs);
             streamWriter.WriteLine(isMoneyNeeded);
+            streamWriter.WriteLine(dontUseShaderPreview);
             streamWriter.Flush();
             fs.Close();
         }
@@ -121,6 +124,17 @@ namespace AdvancedRoadTools.UI
                 {
                     isMoneyNeeded = true;
                 }
+
+                strLine = sr.ReadLine();
+
+                if (strLine == "False")
+                {
+                    dontUseShaderPreview = false;
+                }
+                else
+                {
+                    dontUseShaderPreview = true;
+                }
                 sr.Close();
                 fs.Close();
             }
@@ -128,6 +142,12 @@ namespace AdvancedRoadTools.UI
         public static void isMoneyNeededEnable(bool index)
         {
             isMoneyNeeded = index;
+            SaveSetting();
+        }
+
+        public static void dontUseShaderPreviewEnable(bool index)
+        {
+            dontUseShaderPreview = index;
             SaveSetting();
         }
     }
