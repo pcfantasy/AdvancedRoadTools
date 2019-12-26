@@ -74,7 +74,7 @@
     <Compile Include="Util\RedirectionHelper.cs" />
     <Compile Include="Util\SaveAndStore.cs" />
     <Compile Include="Util\SpriteUtilities.cs" />
-    <Compile Include="UI\AdvancedTools.cs" />
+    <Compile Include="Tools\AdvancedTools.cs" />
     <Compile Include="UI\OneRoundButton.cs" />
     <Compile Include="UI\OptionsKeymappingRoadTool.cs" />
     <Compile Include="UI\OptionUI.cs" />

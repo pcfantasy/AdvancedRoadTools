@@ -10,8 +10,9 @@ using AdvancedRoadTools.Util;
 using ColossalFramework.Math;
 using AdvancedRoadTools.NewData;
 using Object = UnityEngine.Object;
+using AdvancedRoadTools.UI;
 
-namespace AdvancedRoadTools.UI
+namespace AdvancedRoadTools.Tools
 {
     public class AdvancedTools : ToolBase
     {
@@ -62,8 +63,6 @@ namespace AdvancedRoadTools.UI
         Color m_errorColorInfo = new Color(1f, 0.25f, 0.1875f, 0.75f);
         Color m_validColorInfo = new Color(0f, 0f, 0f, 0.5f);
 
-        public Assembly m_networkSkinsAssembly;
-
         public NetManager Manager
         {
             get { return Singleton<NetManager>.instance; }
@@ -107,7 +106,7 @@ namespace AdvancedRoadTools.UI
             mainRoadWidth = 16;
             roadSpace = 0;
             preFixSegmentIndex = 0;
-            roadLength = 8;
+            roadLength = 24;
         }
         protected override void OnToolUpdate()
         {
@@ -141,14 +140,6 @@ namespace AdvancedRoadTools.UI
                     storedPos1[hoveredRoundIndex] = output.m_hitPos;
                     storedElevation[hoveredRoundIndex] = height;
                     storedRadius[hoveredRoundIndex] = radius;
-                    if (storedRampMode[hoveredRoundIndex] == 2)
-                    {
-                        //Build1RoundRoad(false, false, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
-                    }
-                    else
-                    {
-                        //Build3RoundRoad(false, false, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
-                    }
 
                     if (hoveredRoundIndex != 255)
                     {
@@ -190,14 +181,6 @@ namespace AdvancedRoadTools.UI
                                 storedPos1[hoveredRoundIndex] = output.m_hitPos;
                                 storedElevation[hoveredRoundIndex] = height;
                                 storedRadius[hoveredRoundIndex] = radius;
-                                if (storedRampMode[hoveredRoundIndex] == 2)
-                                {
-                                    //Build1RoundRoad(false, true, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
-                                }
-                                else
-                                {
-                                    //Build3RoundRoad(false, true, true, hoveredRoundIndex, hoveredRoundIndex, null, out bool _);
-                                }
                                 updateRoundMode = updateRoundMode ? false : true;
                             }
                             CustomShowToolInfo(true, Localization.Get("ChangeRoundCenter") + "\n" + Localization.Get("Radius") + radius.ToString() + "\n" + Localization.Get("Height") + height.ToString() + "\n" + Localization.Get("ConstructionFee") + (currentMoney / 100f).ToString(), output.m_hitPos);
@@ -208,6 +191,7 @@ namespace AdvancedRoadTools.UI
 
             if (hoveredRoundIndex == 255)
             {
+                //Step 0 & 1
                 if (m_step != 2)
                 {
                     switch (m_step)
@@ -217,8 +201,6 @@ namespace AdvancedRoadTools.UI
                             pos0 = GetNode(m_hover).m_position; 
                             node0 = m_hover;
                             CustomShowToolInfo(true, Localization.Get("STEP0"), output.m_hitPos);
-                            //CustomShowToolInfo(true, Localization.Get("STEP0") + "node0 height = " + pos0.y.ToString(), output.m_hitPos);
-                            //CustomShowToolInfo(true, Localization.Get("STEP0") + "\n" + "node_flag = " + Singleton<NetManager>.instance.m_nodes.m_buffer[m_hover].m_flags.ToString() + "\n" + "node_ele = " + Singleton<NetManager>.instance.m_nodes.m_buffer[m_hover].m_elevation.ToString() + "\n" + "segment flag = " + Singleton<NetManager>.instance.m_segments.m_buffer[m_hoverSegment].m_flags.ToString(), output.m_hitPos);
                             if (rampMode == 1)
                             {
                                 if (CheckYRoadVaild(node0) == "False")
@@ -268,7 +250,7 @@ namespace AdvancedRoadTools.UI
                             break;
                         default: break;
                     }
-
+                    //Step 0 & 1 click mouse
                     if (Input.GetMouseButtonUp(0))
                     {
                         if (m_step < 2)
@@ -292,6 +274,7 @@ namespace AdvancedRoadTools.UI
                 }
                 else
                 {
+                    //Step 2, 1Round and 3Round Tools need to select node.
                     if (rampMode != 1 && rampMode != 3)
                     determineHoveredElements(true);
 
@@ -337,8 +320,6 @@ namespace AdvancedRoadTools.UI
                                     m_step = 0;
                                     CustomShowToolInfo(show: false, null, Vector3.zero);
                                     CustomShowExtraInfo(show: false, null, Vector3.zero);
-                                    //ToolsModifierControl.SetTool<DefaultTool>();
-                                    //enabled = false;
                                     updateRoundMode = false;
                                     currentMoney = 0;
                                     preFixSegmentIndex = 0;
@@ -411,7 +392,7 @@ namespace AdvancedRoadTools.UI
                     }
                     else
                     {
-                        CustomShowToolInfo(true, "Try to fix road mesh" + "\n" + "minCornerOffset = " + MainDataStore.segmentModifiedMinOffset[node0 * 8 + preFixSegmentIndex].ToString(), output.m_hitPos);
+                        CustomShowToolInfo(true, Localization.Get("TRYFIXMESH") + "\n" + Localization.Get("MinCornerOffset") + MainDataStore.segmentModifiedMinOffset[node0 * 8 + preFixSegmentIndex].ToString(), output.m_hitPos);
                     }
                 }
             }
@@ -707,10 +688,6 @@ namespace AdvancedRoadTools.UI
                     {
                         BuildYRoad(true, false);
                     }
-                    //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugA1pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
-                    //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugA2pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
-                    //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugB1pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
-                    //Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, toolColor, debugB2pos, Mathf.Max(6f, 16f), -1f, 1280f, renderLimits: false, alphaBlend: true);
                 }
 
                 if (m_step ==1 || m_step == 2)
@@ -2690,90 +2667,146 @@ namespace AdvancedRoadTools.UI
 
                 ushort localNode1 = 0;
                 ushort localSegment1 = 0;
-                if (!onlyShow)
+                if (leftOffset != 0)
                 {
-                    CreateNodeDontFollowTerrain(out localNode1, ref rand, netInfo, node1Pos);
-                    AdjustElevationDontFollowTerrain(localNode1, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -VectorUtils.NormalizeXZ(node1Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                }
-                else
-                {
-                    if (showMesh)
+                    if (!onlyShow)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1Pos - pos0), VectorUtils.NormalizeXZ(node1Pos - pos0), true, true);
-                        //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
+                        CreateNodeDontFollowTerrain(out localNode1, ref rand, netInfo, node1Pos);
+                        AdjustElevationDontFollowTerrain(localNode1, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -VectorUtils.NormalizeXZ(node1Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                     else
                     {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node1Pos, ele, ele);
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1Pos - pos0), VectorUtils.NormalizeXZ(node1Pos - pos0), true, true);
+                            //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node1Pos, ele, ele);
+                        }
                     }
                 }
 
                 ushort localNode2 = 0;
                 ushort localSegment2 = 0;
-                if (!onlyShow)
+                if (rightOffset != 0)
                 {
-                    CreateNodeDontFollowTerrain(out localNode2, ref rand, netInfo, node2Pos);
-                    AdjustElevationDontFollowTerrain(localNode2, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -VectorUtils.NormalizeXZ(node2Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                }
-                else
-                {
-                    if (showMesh)
+                    if (!onlyShow)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2Pos - pos0), VectorUtils.NormalizeXZ(node2Pos - pos0), true, true);
-                        //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
-                        //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
+                        CreateNodeDontFollowTerrain(out localNode2, ref rand, netInfo, node2Pos);
+                        AdjustElevationDontFollowTerrain(localNode2, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -VectorUtils.NormalizeXZ(node2Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                     else
                     {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node2Pos, ele, ele);
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2Pos - pos0), VectorUtils.NormalizeXZ(node2Pos - pos0), true, true);
+                            //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
+                            //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node2Pos, ele, ele);
+                        }
                     }
                 }
 
                 ushort localNode3 = 0;
                 ushort localSegment3 = 0;
-                if (!onlyShow)
+                if (leftOffset != 0)
                 {
-                    CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
-                    AdjustElevationDontFollowTerrain(localNode3, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                }
-                else
-                {
-                    if (showMesh)
+                    if (!onlyShow)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
-                        //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
+                        CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
+                        AdjustElevationDontFollowTerrain(localNode3, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                     else
                     {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
+                            //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
+                        }
+                    }
+                }
+                else
+                {
+                    if (!onlyShow)
+                    {
+                        CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
+                        AdjustElevationDontFollowTerrain(localNode3, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, node0, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                    }
+                    else
+                    {
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
+                            //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node3Pos, ele, ele);
+                        }
                     }
                 }
 
                 ushort localNode4 = 0;
                 ushort localSegment4 = 0;
-                if (!onlyShow)
+                if (rightOffset != 0)
                 {
-                    CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
-                    AdjustElevationDontFollowTerrain(localNode4, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                }
-                else
-                {
-                    if (showMesh)
+                    if (!onlyShow)
                     {
-                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
-                        //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
+                        CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
+                        AdjustElevationDontFollowTerrain(localNode4, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                     else
                     {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
+                            //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
+                        }
+                    }
+                }
+                else
+                {
+                    if (!onlyShow)
+                    {
+                        CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
+                        AdjustElevationDontFollowTerrain(localNode4, ele);
+                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, node0, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                    }
+                    else
+                    {
+                        if (showMesh)
+                        {
+                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
+                            //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
+                        }
+                        else
+                        {
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node4Pos, ele, ele);
+                        }
                     }
                 }
                 //Singleton<NetManager>.instance.UpdateSegmentRenderer((ushort)localSegment1, true);
