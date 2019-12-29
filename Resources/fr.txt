@@ -33,7 +33,7 @@ SMOOTHMODE	(Lisse du nœud de réseau de départ au nœud de fin)
 CurrentRoadWidth	Largeur actuelle de la route = 
 TRYOPTION	Changer "Nécessite de l'argent pour construire la route" dans l'option mod
 TRYOPTION	Changer "Nécessite de l'argent pour construire la route" dans l'option mod
-NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
-TRYFIXMESH	Try to fix road mesh
-RoadLength	Road Length = 
-MinCornerOffset	minCornerOffset =
+NOSHADERPREVIEW	Le shader ne convient pas pour un aperçu (utilisez-le pour les routes CSUR)
+TRYFIXMESH	Essayez de réparer le réseau routier
+RoadLength	Longueur de route = 
+MinCornerOffset	minCoinDécalé =
