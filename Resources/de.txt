@@ -32,7 +32,8 @@ NeedMoney	Benötigt Geld zum Bau der Straße
 SMOOTHMODE	(Glätten vom Startnetzknotenpunkt bis Endnetzknotenpunkt)
 CurrentRoadWidth	Aktuelle Straßenbreite =
 TRYOPTION	Ändere "Benötigt Geld zum Bau der Straße" in der Mod-Option
-NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
-TRYFIXMESH	Try to fix road mesh
-RoadLength	Road Length = 
-MinCornerOffset	minCornerOffset = 
+TRYOPTION	Ändere "Benötigt Geld zum Bau der Straße" in der Mod-Option
+NOSHADERPREVIEW	Der Shader ist nicht für eine Vorschau geeignet(Verwende diesen, für die CSUR Straßen)
+TRYFIXMESH	Versuche, das Straßennetz zu reparieren
+RoadLength	Straßenlänge = 
+MinCornerOffset	minEckenVersatz =
