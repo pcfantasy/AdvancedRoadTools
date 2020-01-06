@@ -61,6 +61,7 @@ namespace AdvancedRoadTools.Util
 
         public override void OnSaveData()
         {
+#if DEBUG
             if (Loader.CurrentLoadMode == LoadMode.LoadGame || Loader.CurrentLoadMode == LoadMode.NewGame)
             {
                 DebugLog.LogToFileOnly("startsave");
@@ -68,10 +69,12 @@ namespace AdvancedRoadTools.Util
                 gather_saveData();
                 _serializableData.SaveData("AdvancedRoadTools MainDataStore", MainDataStore.SaveData);
             }
+#endif
         }
 
         public override void OnLoadData()
         {
+#if DEBUG
             Loader.DataInit();
             DebugLog.LogToFileOnly("OnLoadData");
             if (true)
@@ -88,6 +91,7 @@ namespace AdvancedRoadTools.Util
                     MainDataStore.Load();
                 }
             }
+#endif
 
         }
     }

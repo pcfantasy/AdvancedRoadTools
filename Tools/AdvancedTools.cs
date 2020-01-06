@@ -2648,13 +2648,13 @@ namespace AdvancedRoadTools.Tools
                 }
                 else
                 {
-                    leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth + roadSpace/2f - mainRoadWidth / 2f;
-                    rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth + roadSpace/2f - (totalWidth - mainRoadWidth - roadSpace) / 2f;
+                    leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth + roadSpace / 2f - mainRoadWidth / 2f;
+                    rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth + roadSpace / 2f - (totalWidth - mainRoadWidth - roadSpace) / 2f;
                 }
                 Vector3 node1Pos = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * leftOffset;
-                //Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * (-roadSpace/4f + 3f) * leftOffset;
+                Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * (-roadSpace / 4f + 3f) * leftOffset;
                 Vector3 node2Pos = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * rightOffset;
-                //Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * (-roadSpace/4f + 3f) * rightOffset;
+                Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * (-roadSpace / 4f + 3f) * rightOffset;
                 Vector3 node3Pos = node1Pos + roadLength1 * startDir;
                 Vector3 node4Pos = node2Pos + roadLength1 * startDir;
                 var rand = new Randomizer(0u);
@@ -2667,146 +2667,90 @@ namespace AdvancedRoadTools.Tools
 
                 ushort localNode1 = 0;
                 ushort localSegment1 = 0;
-                if (leftOffset != 0)
+                if (!onlyShow)
                 {
-                    if (!onlyShow)
+                    CreateNodeDontFollowTerrain(out localNode1, ref rand, netInfo, node1Pos);
+                    AdjustElevationDontFollowTerrain(localNode1, ele);
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1PosExtra - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                }
+                else
+                {
+                    if (showMesh)
                     {
-                        CreateNodeDontFollowTerrain(out localNode1, ref rand, netInfo, node1Pos);
-                        AdjustElevationDontFollowTerrain(localNode1, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -VectorUtils.NormalizeXZ(node1Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true);
+                        //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
                     }
                     else
                     {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1Pos - pos0), VectorUtils.NormalizeXZ(node1Pos - pos0), true, true);
-                            //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node1Pos, ele, ele);
-                        }
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node1Pos, ele, ele);
                     }
                 }
 
                 ushort localNode2 = 0;
                 ushort localSegment2 = 0;
-                if (rightOffset != 0)
+                if (!onlyShow)
                 {
-                    if (!onlyShow)
+                    CreateNodeDontFollowTerrain(out localNode2, ref rand, netInfo, node2Pos);
+                    AdjustElevationDontFollowTerrain(localNode2, ele);
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2PosExtra - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                }
+                else
+                {
+                    if (showMesh)
                     {
-                        CreateNodeDontFollowTerrain(out localNode2, ref rand, netInfo, node2Pos);
-                        AdjustElevationDontFollowTerrain(localNode2, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -VectorUtils.NormalizeXZ(node2Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true);
+                        //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
+                        //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
                     }
                     else
                     {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2Pos - pos0), VectorUtils.NormalizeXZ(node2Pos - pos0), true, true);
-                            //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
-                            //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node2Pos, ele, ele);
-                        }
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node2Pos, ele, ele);
                     }
                 }
 
                 ushort localNode3 = 0;
                 ushort localSegment3 = 0;
-                if (leftOffset != 0)
+                if (!onlyShow)
                 {
-                    if (!onlyShow)
-                    {
-                        CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
-                        AdjustElevationDontFollowTerrain(localNode3, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                    }
-                    else
-                    {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
-                            //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
-                        }
-                    }
+                    CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
+                    AdjustElevationDontFollowTerrain(localNode3, ele);
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, localNode1, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
                 else
                 {
-                    if (!onlyShow)
+                    if (showMesh)
                     {
-                        CreateNodeDontFollowTerrain(out localNode3, ref rand, netInfo, node3Pos);
-                        AdjustElevationDontFollowTerrain(localNode3, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment3, ref rand, netInfo, node0, localNode3, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(node1Pos, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
+                        //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
                     }
                     else
                     {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment3].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node3Pos, ele + 1f), startDir, startDir, true, true);
-                            //RenderNode(netInfo, FollowTerrain(node3Pos, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node3Pos, ele, ele);
-                        }
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(node1Pos, node3Pos, ele, ele);
                     }
                 }
 
                 ushort localNode4 = 0;
                 ushort localSegment4 = 0;
-                if (rightOffset != 0)
+                if (!onlyShow)
                 {
-                    if (!onlyShow)
-                    {
-                        CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
-                        AdjustElevationDontFollowTerrain(localNode4, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                    }
-                    else
-                    {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
-                            //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
-                        }
-                    }
+                    CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
+                    AdjustElevationDontFollowTerrain(localNode4, ele);
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, localNode2, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
                 else
                 {
-                    if (!onlyShow)
+                    if (showMesh)
                     {
-                        CreateNodeDontFollowTerrain(out localNode4, ref rand, netInfo, node4Pos);
-                        AdjustElevationDontFollowTerrain(localNode4, ele);
-                        if (Singleton<NetManager>.instance.CreateSegment(out localSegment4, ref rand, netInfo, node0, localNode4, startDir, -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                        RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(node2Pos, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
+                        //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
                     }
                     else
                     {
-                        if (showMesh)
-                        {
-                            RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment4].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node4Pos, ele + 1f), startDir, startDir, true, true);
-                            //RenderNode(netInfo, FollowTerrain(node4Pos, ele + 1f), startDir);
-                        }
-                        else
-                        {
-                            currentMoney += netInfo.m_netAI.GetConstructionCost(pos0, node4Pos, ele, ele);
-                        }
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(node2Pos, node4Pos, ele, ele);
                     }
                 }
                 //Singleton<NetManager>.instance.UpdateSegmentRenderer((ushort)localSegment1, true);
@@ -2821,9 +2765,9 @@ namespace AdvancedRoadTools.Tools
                 float leftOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + leftAddWidth + roadSpace - (totalWidth - mainRoadWidth - 2 * roadSpace) / 4f;
                 float rightOffset = Singleton<NetManager>.instance.m_nodes.m_buffer[node0].Info.m_halfWidth + rightAddWidth + roadSpace - (totalWidth - mainRoadWidth - 2 * roadSpace) / 4f;
                 Vector3 node1Pos = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * leftOffset;
-                //Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * (-roadSpace / 4f + 3f) * leftOffset;
+                Vector3 node1PosExtra = pos0 + roadLength * startDir + (new Vector3(-startDir.z, startDir.y, startDir.x)) * (-roadSpace / 4f + 3f) * leftOffset;
                 Vector3 node2Pos = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * rightOffset;
-                //Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * (-roadSpace / 4f + 3f) * rightOffset;
+                Vector3 node2PosExtra = pos0 + roadLength * startDir + (new Vector3(startDir.z, startDir.y, -startDir.x)) * (-roadSpace / 4f + 3f) * rightOffset;
                 Vector3 node3Pos = node1Pos + roadLength1 * startDir;
                 Vector3 node4Pos = node2Pos + roadLength1 * startDir;
                 Vector3 node5Pos = pos0 + (roadLength + roadLength1) * startDir;
@@ -2842,13 +2786,13 @@ namespace AdvancedRoadTools.Tools
                 {
                     CreateNodeDontFollowTerrain(out localNode1, ref rand, netInfo, node1Pos);
                     AdjustElevationDontFollowTerrain(localNode1, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1Pos - pos0), -VectorUtils.NormalizeXZ(node1Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment1, ref rand, netInfo, node0, localNode1, VectorUtils.NormalizeXZ(node1PosExtra - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
                 if (showMesh)
                 {
-                    //RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true);
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1Pos - pos0), VectorUtils.NormalizeXZ(node1Pos - pos0), true, true);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1PosExtra - pos0), startDir, true, true);
+                    //RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment1].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node1Pos, ele + 1f), VectorUtils.NormalizeXZ(node1Pos - pos0), VectorUtils.NormalizeXZ(node1Pos - pos0), true, true);
                     //RenderNode(netInfo, FollowTerrain(node1Pos, ele + 1f), startDir);
                     //RenderNode(Manager.m_nodes.m_buffer[node0].Info, FollowTerrain(pos0, ele + 1f), startDir);
                 }
@@ -2863,13 +2807,13 @@ namespace AdvancedRoadTools.Tools
                 {
                     CreateNodeDontFollowTerrain(out localNode2, ref rand, netInfo, node2Pos);
                     AdjustElevationDontFollowTerrain(localNode2, ele);
-                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2Pos - pos0), -VectorUtils.NormalizeXZ(node2Pos - pos0), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    if (Singleton<NetManager>.instance.CreateSegment(out localSegment2, ref rand, netInfo, node0, localNode2, VectorUtils.NormalizeXZ(node2PosExtra - pos0), -startDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
                 if (showMesh)
                 {
-                    //RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true);
-                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2Pos - pos0), VectorUtils.NormalizeXZ(node2Pos - pos0), true, true);
+                    RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2PosExtra - pos0), startDir, true, true);
+                    //RenderSegment(netInfo, Singleton<NetManager>.instance.m_segments.m_buffer[localSegment2].m_flags, FollowTerrain(pos0, ele + 1f), FollowTerrain(node2Pos, ele + 1f), VectorUtils.NormalizeXZ(node2Pos - pos0), VectorUtils.NormalizeXZ(node2Pos - pos0), true, true);
                     //RenderNode(netInfo, FollowTerrain(node2Pos, ele + 1f), startDir);
                 }
                 else

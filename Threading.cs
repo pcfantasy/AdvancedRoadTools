@@ -20,7 +20,9 @@ namespace AdvancedRoadTools
                 {
                     if (isFirstTime)
                     {
+#if DEBUG
                         CheckDetour();
+#endif
                         isFirstTime = false;
                     }
                 }

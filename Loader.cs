@@ -64,8 +64,10 @@ namespace AdvancedRoadTools
                     OptionUI.LoadSetting();
                     SetupGui();
                     SetupTools();
+#if DEBUG
                     HarmonyInitDetour();
                     InitDetour();
+#endif
                     DebugLog.LogToFileOnly("OnLevelLoaded");
                 }
             }
@@ -224,7 +226,9 @@ namespace AdvancedRoadTools
                 SetupOneRoundButton();
                 SetupYRoadButton();
                 SetupSmoothButton();
+#if DEBUG
                 SetupFixButton();
+#endif
                 isGuiRunning = true;
             }
         }
@@ -279,12 +283,16 @@ namespace AdvancedRoadTools
                 UnityEngine.Object.Destroy(oneRoundButton);
                 UnityEngine.Object.Destroy(yRoadButton);
                 UnityEngine.Object.Destroy(smoothButton);
+#if DEBUG
                 UnityEngine.Object.Destroy(fixButton);
+#endif
                 threeRoundButton = null;
                 oneRoundButton = null;
                 yRoadButton = null;
                 smoothButton = null;
+#if DEBUG
                 fixButton = null;
+#endif
             }
         }
     }
