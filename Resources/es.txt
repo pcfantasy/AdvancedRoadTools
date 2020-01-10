@@ -31,7 +31,7 @@ OtherOption	Opciones Adicionales
 NeedMoney	Necesitas dinero para contruir la carretera
 SMOOTHMODE	(liso de inicio a fin)
 CurrentRoadWidth	Ancho de la carretera actual = 
-TRYOPTION	Cambiar "Necesitas dinero para contruir la carretera" en las opciones del mod"
+TRYOPTION	Cambiar "Necesitas dinero para contruir la carretera" en las opciones del mod
 NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
 TRYFIXMESH	Try to fix road mesh
 RoadLength	Road Length = 

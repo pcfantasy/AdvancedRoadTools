@@ -31,8 +31,8 @@ OtherOption	Дополнительные настройки
 NeedMoney	Нужны деньги, чтобы построить дорогу
 SMOOTHMODE	(Плавный изгиб дороги)
 CurrentRoadWidth	Ширина выбранной дороги = 
-TRYOPTION	Change "Need money to build road" in mod`s option"
-NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
-TRYFIXMESH	Try to fix road mesh
-RoadLength	Road Length = 
-MinCornerOffset	minCornerOffset = 
+TRYOPTION	Измените "Нужны деньги, чтобы построить дорогу" в Настройках
+NOSHADERPREVIEW	Не использовать шейдер в качестве предварительного просмотра (выберите это, если используете дороги CSUR)
+RoadLength	Длина дороги = 
+MinCornerOffset	min Угол смещения = 
+TRYFIXMESH	Попробовать исправить дорожную сетку
