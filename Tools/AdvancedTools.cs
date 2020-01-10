@@ -1067,8 +1067,10 @@ namespace AdvancedRoadTools.Tools
 
                 for (int i = 0; i < storeIndex; i++)
                 {
+                    //update mode.
                     if ((storedPos0[i] == m_pos0) && (storedPos2[i] == m_pos2) && (storedNode0[i] == m_node0) && (storedNode2[i] == m_node2))
                     {
+                        //TODO: For CSUR road, we may need to build two different ramps bettween node0 and node2.
                         isUpdate = true;
                         storeIndex = (byte)i;
                     }

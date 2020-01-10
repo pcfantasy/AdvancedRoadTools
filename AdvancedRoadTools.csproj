@@ -96,7 +96,8 @@
     <PostBuildEvent>copy "D:\Mod\AdvancedRoadTools\bin\Release\AdvancedRoadTools.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\AdvancedRoadTools.dll
 rd /q /s "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
 mkdir "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
-copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"</PostBuildEvent>
+copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
+copy "D:\Mod\AdvancedRoadTools\bin\Release\0Harmony.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\0Harmony.dll"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
