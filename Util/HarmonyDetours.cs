@@ -13,7 +13,7 @@ namespace AdvancedRoadTools.Util
         private static void ConditionalPatch(this HarmonyInstance harmony, MethodBase method, HarmonyMethod prefix, HarmonyMethod postfix)
         {
             var fullMethodName = string.Format("{0}.{1}", method.ReflectedType?.Name ?? "(null)", method.Name);
-            if (harmony.GetPatchInfo(method)?.Owners?.Contains(harmony.Id) == true)
+            if (HarmonyInstance.GetPatchInfo(method)?.Owners?.Contains(harmony.Id) == true)
             {
                 DebugLog.LogToFileOnly("Harmony patches already present for {0}" + fullMethodName.ToString());
             }
