@@ -1,4 +1,4 @@
-HotKeyAdd	Augmentez le rayon/LargeurGauche/Largeur de route
+﻿HotKeyAdd	Augmentez le rayon/LargeurGauche/Largeur de route
 HotKeyMinus	Réduisez le rayon/LargeurGauche/Largeur de route
 HotKeyRise	Augmenter la hauteur/LargeurDroite/Espace entre les rues
 HotKeyLower	Baisser la hauteur/LargeurDroite/Espace entre les rues
@@ -31,4 +31,8 @@ OtherOption	Plus d'options
 NeedMoney	A besoin d'argent pour la construction de la route
 SMOOTHMODE	(Lisse du nœud de réseau de départ au nœud de fin)
 CurrentRoadWidth	Largeur actuelle de la route = 
-TRYOPTION	Change "Need money to build road" in mod`s option
+TRYOPTION	Changer "Nécessite de l'argent pour construire la route" dans l'option mod
+NOSHADERPREVIEW	Le shader ne convient pas pour un aperçu (utilisez-le pour les routes CSUR)
+TRYFIXMESH	Essayez de réparer le réseau routier
+RoadLength	Longueur de route = 
+MinCornerOffset	minCoinDécalé =

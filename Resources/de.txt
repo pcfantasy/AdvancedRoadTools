@@ -1,4 +1,4 @@
-HotKeyAdd	Radius vergrößern/LinkeBreite/Straßenbreite
+﻿HotKeyAdd	Radius vergrößern/LinkeBreite/Straßenbreite
 HotKeyMinus	Radius verringern/LinkeBreite/Straßenbreite
 HotKeyRise	Höhe steigern/RechteBreite/Straßenabstand
 HotKeyLower	Höhe senken/RechteBreite/Straßenabstand
@@ -31,4 +31,8 @@ OtherOption	Weitere Optionen
 NeedMoney	Benötigt Geld zum Bau der Straße
 SMOOTHMODE	(Glätten vom Startnetzknotenpunkt bis Endnetzknotenpunkt)
 CurrentRoadWidth	Aktuelle Straßenbreite =
-TRYOPTION	Change "Need money to build road" in mod`s option
+TRYOPTION	Ändere "Benötigt Geld zum Bau der Straße" in der Mod-Option
+NOSHADERPREVIEW	Der Shader ist nicht für eine Vorschau geeignet(Verwende diesen, für die CSUR Straßen)
+TRYFIXMESH	Versuche, das Straßennetz zu reparieren
+RoadLength	Straßenlänge = 
+MinCornerOffset	minEckenVersatz =

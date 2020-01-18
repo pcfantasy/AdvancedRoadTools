@@ -5,23 +5,24 @@ using UnityEngine;
 
 namespace AdvancedRoadTools.UI
 {
-    public class OneRoundButton : UIButton
+    public class FixButton : UIButton
     {
         public override void Start()
         {
-            name = "OneRoundButton";
-            //text = "O";
+            name = "FixRoundButton";
+            //text = "T";
             Vector2 resolution = UIView.GetAView().GetScreenResolution();
-            var pos = new Vector2((110f), (resolution.y * 4f / 5f));
+            var pos = new Vector2((180f), (resolution.y * 4f / 5f));
             Rect rect = new Rect(pos.x, pos.y, 30, 30);
             SpriteUtilities.ClampRectToScreen(ref rect, resolution);
-            DebugLog.LogToFileOnly($"Setting OneRoundButton position to [{pos.x},{pos.y}]");
+            DebugLog.LogToFileOnly($"Setting FixRoundButton position to [{pos.x},{pos.y}]");
             absolutePosition = rect.position;
             Invalidate();
-            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 490f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
+            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth / 2f - 450f), (Loader.parentGuiView.fixedHeight / 2f + 370f));
+            //relativePosition = new Vector3((Loader.parentGuiView.fixedWidth - 70f), (Loader.parentGuiView.fixedHeight / 2 + 100f));
             atlas = SpriteUtilities.GetAtlas(Loader.m_atlasName);
-            normalBgSprite = "1Round";
-            hoveredBgSprite = "1Round_S";
+            normalBgSprite = "Fix";
+            hoveredBgSprite = "Fix_S";
             size = new Vector2(30f, 30f);
             zOrder = 11;
             eventClick += delegate (UIComponent component, UIMouseEventParameter eventParam)
@@ -41,18 +42,19 @@ namespace AdvancedRoadTools.UI
                     ToolsModifierControl.SetTool<DefaultTool>();
                     AdvancedTools.instance.enabled = true;
                     AdvancedTools.m_step = 0;
-                    AdvancedTools.rampMode = 2;
-                    AdvancedTools.height = 0;
+                    AdvancedTools.rampMode = 3;
+                    AdvancedTools.preFixSegmentIndex = 0;
                 }
                 else
                 {
                     ToolsModifierControl.SetTool<DefaultTool>();
                     AdvancedTools.instance.enabled = false;
                     AdvancedTools.m_step = 0;
-                    AdvancedTools.height = 0;
+                    AdvancedTools.preFixSegmentIndex = 0;
                 }
             };
         }
+
         public void OnGUI()
         {
             //base.Update();
