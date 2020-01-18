@@ -1271,89 +1271,109 @@ namespace AdvancedRoadTools.Tools
                 }
             }
 
-            for (int i = 0; i <= partBNum; i++)
+            if (partBLength > 20f)
             {
-                float p1 = (float)(i + 1) / (float)(partBNum + 1);
-                float p2 = (float)i / (float)(partBNum + 1);
-                if (!onlyShow)
+                for (int i = 0; i <= partBNum; i++)
                 {
-                    if (!OptionUI.isSmoothMode)
+                    float p1 = (float)(i + 1) / (float)(partBNum + 1);
+                    float p2 = (float)i / (float)(partBNum + 1);
+                    if (!onlyShow)
                     {
-                        CreateNode(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
-                        AdjustElevation(node[i + partANum + 1], m_elevation);
+                        if (!OptionUI.isSmoothMode)
+                        {
+                            CreateNode(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
+                            AdjustElevation(node[i + partANum + 1], m_elevation);
+                        }
+                        else
+                        {
+                            var height = m_pos0.y - (heightDiff * (partALength + BezierDistance(partBLegacy, 0, p1)) / totalDistance);
+                            var position = new Vector3(partB.Position(p1).x, height, partB.Position(p1).z);
+                            CreateNodeDontFollowTerrain(out node[i + partANum + 1], ref rand, netInfo, position);
+                            //CreateNodeDontFollowTerrain(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
+                        }
+                        if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], VectorUtils.NormalizeXZ(partB.Tangent(p2)), -VectorUtils.NormalizeXZ(partB.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                     else
                     {
-                        var height = m_pos0.y - (heightDiff * (partALength + BezierDistance(partBLegacy, 0, p1)) / totalDistance);
-                        var position = new Vector3(partB.Position(p1).x, height, partB.Position(p1).z);
-                        CreateNodeDontFollowTerrain(out node[i + partANum + 1], ref rand, netInfo, position);
-                        //CreateNodeDontFollowTerrain(out node[i + partANum + 1], ref rand, netInfo, partB.Position(p1));
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(partB.Position(p2), partB.Position(p1), m_elevation, m_elevation);
                     }
-                    if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], VectorUtils.NormalizeXZ(partB.Tangent(p2)), -VectorUtils.NormalizeXZ(partB.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
-                else
-                {
-                    currentMoney += netInfo.m_netAI.GetConstructionCost(partB.Position(p2), partB.Position(p1), m_elevation, m_elevation);
-                }
+            }
+            else
+            {
+                partBNum = -1; //too short
             }
 
             if (!rightTurn)
             {
-                for (int i = 0; i <= partCNum; i++)
+                if (partCLength > 20f)
                 {
-                    float p1 = (float)(i + 1) / (float)(partCNum + 1);
-                    float p2 = (float)(i) / (float)(partCNum + 1);
-                    if (!onlyShow)
+                    for (int i = 0; i <= partCNum; i++)
                     {
-                        if (!OptionUI.isSmoothMode)
+                        float p1 = (float)(i + 1) / (float)(partCNum + 1);
+                        float p2 = (float)(i) / (float)(partCNum + 1);
+                        if (!onlyShow)
                         {
-                            CreateNode(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
-                            AdjustElevation(node[i + partANum + partBNum + 2], m_elevation);
+                            if (!OptionUI.isSmoothMode)
+                            {
+                                CreateNode(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
+                                AdjustElevation(node[i + partANum + partBNum + 2], m_elevation);
+                            }
+                            else
+                            {
+                                var height = m_pos0.y - (heightDiff * (partALength + partBLength + BezierDistance(partCLegacy, 0, p1)) / totalDistance);
+                                var position = new Vector3(partC.Position(p1).x, height, partC.Position(p1).z);
+                                CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + 2], ref rand, netInfo, position);
+                                //CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
+                            }
+
+                            if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + 2], ref rand, netInfo, node[i + partANum + partBNum + 1], node[i + partANum + partBNum + 2], VectorUtils.NormalizeXZ(partC.Tangent(p2)), -VectorUtils.NormalizeXZ(partC.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                                Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                         else
                         {
-                            var height = m_pos0.y - (heightDiff * (partALength + partBLength + BezierDistance(partCLegacy, 0, p1)) / totalDistance);
-                            var position = new Vector3(partC.Position(p1).x, height, partC.Position(p1).z);
-                            CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + 2], ref rand, netInfo, position);
-                            //CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + 2], ref rand, netInfo, partC.Position(p1));
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(partC.Position(p2), partC.Position(p1), m_elevation, m_elevation);
                         }
-
-                        if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + 2], ref rand, netInfo, node[i + partANum + partBNum + 1], node[i + partANum + partBNum + 2], VectorUtils.NormalizeXZ(partC.Tangent(p2)), -VectorUtils.NormalizeXZ(partC.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
-                    }
-                    else
-                    {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(partC.Position(p2), partC.Position(p1), m_elevation, m_elevation);
                     }
                 }
-
-
-                for (int i = 0; i <= partDNum; i++)
+                else
                 {
-                    float p1 = (float)(i + 1) / (float)(partDNum + 1);
-                    float p2 = (float)(i) / (float)(partDNum + 1);
-                    if (!onlyShow)
+                    partCNum = -1;
+                }
+
+                if (partDLength > 20f)
+                {
+                    for (int i = 0; i <= partDNum; i++)
                     {
-                        if (!OptionUI.isSmoothMode)
+                        float p1 = (float)(i + 1) / (float)(partDNum + 1);
+                        float p2 = (float)(i) / (float)(partDNum + 1);
+                        if (!onlyShow)
                         {
-                            CreateNode(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
-                            AdjustElevation(node[i + partANum + partBNum + partCNum + 3], m_elevation);
+                            if (!OptionUI.isSmoothMode)
+                            {
+                                CreateNode(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
+                                AdjustElevation(node[i + partANum + partBNum + partCNum + 3], m_elevation);
+                            }
+                            else
+                            {
+                                var height = m_pos0.y - (heightDiff * (partALength + partBLength + partCLength + BezierDistance(partDLegacy, 0, p1)) / totalDistance);
+                                var position = new Vector3(partD.Position(p1).x, height, partD.Position(p1).z);
+                                CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, position);
+                                //CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
+                            }
+                            if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + 2], node[i + partANum + partBNum + partCNum + 3], VectorUtils.NormalizeXZ(partD.Tangent(p2)), -VectorUtils.NormalizeXZ(partD.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                                Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                         else
                         {
-                            var height = m_pos0.y - (heightDiff * (partALength + partBLength + partCLength + BezierDistance(partDLegacy, 0, p1)) / totalDistance);
-                            var position = new Vector3(partD.Position(p1).x, height, partD.Position(p1).z);
-                            CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, position);
-                            //CreateNodeDontFollowTerrain(out node[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, partD.Position(p1));
+                            currentMoney += netInfo.m_netAI.GetConstructionCost(partD.Position(p2), partD.Position(p1), m_elevation, m_elevation);
                         }
-                        if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + partBNum + partCNum + 3], ref rand, netInfo, node[i + partANum + partBNum + partCNum + 2], node[i + partANum + partBNum + partCNum + 3], VectorUtils.NormalizeXZ(partD.Tangent(p2)), -VectorUtils.NormalizeXZ(partD.Tangent(p1)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
-                    else
-                    {
-                        currentMoney += netInfo.m_netAI.GetConstructionCost(partD.Position(p2), partD.Position(p1), m_elevation, m_elevation);
-                    }
+                }
+                else
+                {
+                    partDNum = -1;
                 }
 
                 if (partENum > 0)
