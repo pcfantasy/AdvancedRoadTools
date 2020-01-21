@@ -1,0 +1,38 @@
+﻿HotKeyAdd	증가 반경/좌측 반경/도로 반경
+HotKeyMinus	감소 반경/좌측 반경/도로 반경
+HotKeyRise	증가 높이/우측 반경/도로 간격
+HotKeyLower	감소 높이/우측 반경/도로 간격
+HotKeyBuild	건설
+HotKeyLaterBuild	최근 건설
+HotKeyClear	취소
+ChangeRoundCenter	둥근 도로 중심 변경 가능함.
+Radius	반경 = 
+Height	높이 = 
+ConstructionFee	필요한 건설 비용 = 
+STEP0	시작할 노드 클릭
+STEP0ERROR	이 노드는 가능합니다
+3ROUNDSTEP1	둥근 도로 반경 조절 후 클릭 / 반경 조절 = 
+YROADSTEP1	결정후 클릭 / 추가할 좌측 도로 폭 = 
+RightAddedWidth	추가할 우측 도로 폭 = 
+1ROUNDSTEP1	건설을 시작할 노드 클릭
+NOMONEY	건설 비용 부족함
+3ROUNDSTEP2	연결을 마칠 노드 클릭.
+YROADSTEP2Single	좌측 도로 폭 선택후 클릭.
+YROADSTEP2Dual	매인 도로 폭 선택후 클릭.
+1ROUNDSTEP2	연결을 마칠 노드 클릭.
+MainRoadWidth	메인도로 폭 = 
+RightLeftRoadWidth	우측 도로 폭&좌측 도로 폭
+RoadGaps	도로 간격 = 
+RightRoadWidth	우측 도로 폭 = 
+LeftRoadWidth	좌측 도로 폭 = 
+InvalidShape	불가능한 건설 모양
+ShortCut	단축키
+OtherOption	다른 옵션
+NeedMoney	도로 건설시 돈 사용함
+SMOOTHMODE	(시작과 끝을 부드럽게 연결 중)
+CurrentRoadWidth	현재 도로 폭 = 
+TRYOPTION	모드 옵션의 "도로 건설시 돈 사용함"을 변경하십시오
+NOSHADERPREVIEW	쉐이터 프리뷰 사용 안함(CSUR 도로 모드 사용시 체크)
+TRYFIXMESH	도로 메쉬값을 수정하십시오
+RoadLength	도로 길이 = 
+MinCornerOffset	최소 코너 값 = 
