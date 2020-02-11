@@ -88,6 +88,7 @@
     <Content Include="Resources\fr.txt" />
     <Content Include="Resources\ko.txt" />
     <Content Include="Resources\ru.txt" />
+    <Content Include="Resources\zh-cn.txt" />
     <Content Include="Resources\zh.txt" />
     <Content Include="Resources\en.txt" />
     <Content Include="Resources\Icon.png" />
