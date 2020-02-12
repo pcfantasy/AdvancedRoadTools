@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="PreviewImage.png" />
     <Content Include="Resources\de.txt" />
     <Content Include="Resources\es.txt" />
     <Content Include="Resources\fr.txt" />
@@ -95,11 +96,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "D:\Mod\AdvancedRoadTools\bin\Release\AdvancedRoadTools.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\AdvancedRoadTools.dll
+    <PostBuildEvent>copy "D:\Mod\AdvancedRoadTools\bin\Release\AdvancedRoadTools.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\AdvancedRoadTools.dll"
 rd /q /s "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
 mkdir "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
 copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
-copy "D:\Mod\AdvancedRoadTools\bin\Release\0Harmony.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\0Harmony.dll"</PostBuildEvent>
+copy "D:\Mod\AdvancedRoadTools\bin\Release\0Harmony.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\0Harmony.dll"
+copy "D:\Mod\AdvancedRoadTools\PreviewImage.png"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\PreviewImage.png"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
