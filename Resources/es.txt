@@ -33,6 +33,5 @@ SMOOTHMODE	(liso de inicio a fin)
 CurrentRoadWidth	Ancho de la carretera actual = 
 TRYOPTION	Cambiar "Necesitas dinero para construir la carretera" en las opciones del mod
 NOSHADERPREVIEW	No uses shader como avance (selecciona si usas la carretera CSUR)
-TRYFIXMESH	Intenta corregir la malla de la carretera
 RoadLength	Largo de carretera = 
-MinCornerOffset	minCornerOffset = 
+NODEGAP	Road node gap

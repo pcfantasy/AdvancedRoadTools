@@ -33,6 +33,5 @@ SMOOTHMODE	(smooth from start to end)
 CurrentRoadWidth	Current RoadWidth = 
 TRYOPTION	Change "Need money to build road" in mod`s option
 NOSHADERPREVIEW	Do not use shader as preview(select this if using CSUR road)
-TRYFIXMESH	Try to fix road mesh
 RoadLength	Road Length = 
-MinCornerOffset	minCornerOffset = 
+NODEGAP	Road node gap

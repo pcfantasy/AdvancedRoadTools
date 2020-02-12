@@ -36,9 +36,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>F:\SteamLibrary\steamapps\common\Cities_Skylines\Cities_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -62,17 +59,10 @@
     <Compile Include="AdvancedRoadTools.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="NewData\CustomNetSegment.cs" />
-    <Compile Include="NewManager\CustomNetManager.cs" />
-    <Compile Include="Threading.cs" />
     <Compile Include="UI\SmoothButton.cs" />
-    <Compile Include="UI\FixButton.cs" />
     <Compile Include="UI\YRoadButton.cs" />
-    <Compile Include="Util\HarmonyDetours.cs" />
     <Compile Include="Util\DebugLog.cs" />
     <Compile Include="Util\Localization.cs" />
-    <Compile Include="Util\MainDataStore.cs" />
-    <Compile Include="Util\RedirectionHelper.cs" />
-    <Compile Include="Util\SaveAndStore.cs" />
     <Compile Include="Util\SpriteUtilities.cs" />
     <Compile Include="Tools\AdvancedTools.cs" />
     <Compile Include="UI\OneRoundButton.cs" />
@@ -100,7 +90,6 @@
 rd /q /s "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
 mkdir "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
 copy "D:\Mod\AdvancedRoadTools\Resources\*.*" "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\Resources"
-copy "D:\Mod\AdvancedRoadTools\bin\Release\0Harmony.dll"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\0Harmony.dll"
 copy "D:\Mod\AdvancedRoadTools\PreviewImage.png"  "F:\SteamLibrary\steamapps\workshop\content\255710\1925527132\PreviewImage.png"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

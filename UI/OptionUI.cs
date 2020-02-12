@@ -15,6 +15,8 @@ namespace AdvancedRoadTools.UI
         public static bool isMoneyNeeded = false;
         public static bool isSmoothMode = false;
         public static bool dontUseShaderPreview = false;
+        static UISlider nodeGapSlider;
+        public static int nodeGap = 10;
         public static void makeSettings(UIHelperBase helper)
         {
             // tabbing code is borrowed from RushHour mod
@@ -55,29 +57,8 @@ namespace AdvancedRoadTools.UI
             var generalGroup1 = panelHelper.AddGroup(Localization.Get("OtherOption")) as UIHelper;
             generalGroup1.AddCheckbox(Localization.Get("NeedMoney"), isMoneyNeeded, (index) => isMoneyNeededEnable(index));
             generalGroup1.AddCheckbox(Localization.Get("NOSHADERPREVIEW"), dontUseShaderPreview, (index) => dontUseShaderPreviewEnable(index));
+            nodeGapSlider = generalGroup1.AddSlider(Localization.Get("NODEGAP") + "(" + nodeGap.ToString() + "U)", 5, 10, 1, nodeGap, onNodeGapChanged) as UISlider;
             SaveSetting();
-
-            // Function_ShortCut
-            /*++tabIndex;
-
-            AddOptionTab(tabStrip, "ShortCut");
-            tabStrip.selectedIndex = tabIndex;
-
-            currentPanel = tabStrip.tabContainer.components[tabIndex] as UIPanel;
-            currentPanel.autoLayout = true;
-            currentPanel.autoLayoutDirection = LayoutDirection.Vertical;
-            currentPanel.autoLayoutPadding.top = 5;
-            currentPanel.autoLayoutPadding.left = 10;
-            currentPanel.autoLayoutPadding.right = 10;
-
-            panelHelper = new UIHelper(currentPanel);
-
-            generalGroup = panelHelper.AddGroup("Beta function") as UIHelper;
-            panel = generalGroup.self as UIPanel;
-
-            var generalGroup1 = panelHelper.AddGroup("Beta function") as UIHelper;
-            generalGroup1.AddCheckbox("Allow road tools to make road more like a circle(may impact performance)", isMoreRound, (index) => isMoreRoundEnable(index));
-            SaveSetting();*/
         }
         private static UIButton AddOptionTab(UITabstrip tabStrip, string caption)
         {
@@ -103,6 +84,7 @@ namespace AdvancedRoadTools.UI
             StreamWriter streamWriter = new StreamWriter(fs);
             streamWriter.WriteLine(isMoneyNeeded);
             streamWriter.WriteLine(dontUseShaderPreview);
+            streamWriter.WriteLine(nodeGap);
             streamWriter.Flush();
             fs.Close();
         }
@@ -134,6 +116,9 @@ namespace AdvancedRoadTools.UI
                 {
                     dontUseShaderPreview = true;
                 }
+
+                strLine = sr.ReadLine();
+                if (!int.TryParse(strLine, out nodeGap)) nodeGap = 10;
                 sr.Close();
                 fs.Close();
             }
@@ -147,6 +132,14 @@ namespace AdvancedRoadTools.UI
         public static void dontUseShaderPreviewEnable(bool index)
         {
             dontUseShaderPreview = index;
+            SaveSetting();
+        }
+
+        private static void onNodeGapChanged(float newVal)
+        {
+            nodeGap = (int)newVal;
+            nodeGapSlider.tooltip = newVal.ToString();
+            nodeGapSlider.parent.Find<UILabel>("Label").text = Localization.Get("NODEGAP") + "(" + nodeGap.ToString() + "U)";
             SaveSetting();
         }
     }

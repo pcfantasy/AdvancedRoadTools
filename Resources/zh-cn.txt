@@ -33,6 +33,5 @@ SMOOTHMODE	(从起点到终点顺滑)
 CurrentRoadWidth	目前的道路宽度 = 
 TRYOPTION	可以更改mod的选项，取消修路需要钱
 NOSHADERPREVIEW	不要用阴影预览(用CSUR路的时候点选他)
-TRYFIXMESH	Try to fix road mesh
-RoadLength	Road Length = 
-MinCornerOffset	minCornerOffset = 
+RoadLength	道路长度 = 
+NODEGAP	道路节点间隔
