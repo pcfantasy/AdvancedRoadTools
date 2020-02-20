@@ -34,4 +34,4 @@ CurrentRoadWidth	Ancho de la carretera actual =
 TRYOPTION	Cambiar "Necesitas dinero para construir la carretera" en las opciones del mod
 NOSHADERPREVIEW	No uses shader como avance (selecciona si usas la carretera CSUR)
 RoadLength	Largo de carretera = 
-NODEGAP	Road node gap
+NODEGAP	Separación de nodo de carretera
