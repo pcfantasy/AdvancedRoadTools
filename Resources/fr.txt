@@ -34,4 +34,4 @@ CurrentRoadWidth	Largeur actuelle de la route =
 TRYOPTION	Changer "Nécessite de l'argent pour construire la route" dans l'option mod
 NOSHADERPREVIEW	Le shader ne convient pas pour un aperçu (utilisez-le pour les routes CSUR)
 RoadLength	Longueur de route = 
-NODEGAP	Road node gap
+NODEGAP	L'écart de nœud de route
