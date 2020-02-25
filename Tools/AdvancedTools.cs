@@ -32,7 +32,7 @@ namespace AdvancedRoadTools.Tools
         ushort node1;
         ushort node2;
         ushort segment1;
-        public static byte radius;
+        public static float radius;
         public static byte rampMode;
         public static float height;
         public static int currentMoney;
@@ -48,7 +48,7 @@ namespace AdvancedRoadTools.Tools
         public static Vector3[] storedPos1 = new Vector3[8];
         public static Vector3[] storedPos2 = new Vector3[8];
         public static float[] storedElevation = new float[8];
-        public static byte[] storedRadius = new byte[8];
+        public static float[] storedRadius = new float[8];
         public static byte[] storedRampMode = new byte[8];
         public static ushort[] storedNode0 = new ushort[8];
         public static ushort[] storedNode2 = new ushort[8];
@@ -93,7 +93,7 @@ namespace AdvancedRoadTools.Tools
             storedPos1 = new Vector3[8];
             storedPos2 = new Vector3[8];
             storedElevation = new float[8];
-            storedRadius = new byte[8];
+            storedRadius = new float[8];
             storedRampMode = new byte[8];
             storedNode0 = new ushort[8];
             storedNode2 = new ushort[8];
@@ -394,6 +394,17 @@ namespace AdvancedRoadTools.Tools
             }
         }
 
+        public float Clamp(float value, float min, float max)
+        {
+            if (value < min)
+                return min;
+
+            if (value > max)
+                return max;
+
+            return value;
+        }
+
         protected override void OnToolGUI(Event e)
         {
             if (enabled == true)
@@ -401,7 +412,7 @@ namespace AdvancedRoadTools.Tools
                 if (OptionsKeymappingRoadTool.m_add.IsPressed(e))
                 {
                     if (rampMode == 0 || rampMode == 2)
-                        radius = (byte)COMath.Clamp(radius + 1, 4, 250);
+                        radius = Clamp(radius + 0.5f, 4, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 2, 0, 32);
                     else if (m_step == 2)
@@ -410,7 +421,7 @@ namespace AdvancedRoadTools.Tools
                 if (OptionsKeymappingRoadTool.m_minus.IsPressed(e))
                 {
                     if (rampMode == 0 || rampMode == 2)
-                        radius = (byte)COMath.Clamp(radius - 1, 4, 250);
+                        radius = Clamp(radius - 0.5f, 4, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 2, 0, 32);
                     else if (m_step == 2)
@@ -894,7 +905,7 @@ namespace AdvancedRoadTools.Tools
             Vector3 m_pos1 = pos1;
             Vector3 m_pos2 = pos2;
             float m_elevation = height;
-            byte m_radius = radius;
+            float m_radius = radius;
             ushort m_node0 = node0;
             ushort m_node2 = node2;
             NetInfo m_loacalNetInfo = m_netInfo;
@@ -1456,7 +1467,7 @@ namespace AdvancedRoadTools.Tools
             Vector3 m_pos1 = pos1;
             Vector3 m_pos2 = pos2;
             float m_elevation = height;
-            byte m_radius = radius;
+            float m_radius = radius;
             ushort m_node1 = node1;
             ushort m_node2 = node2;
             NetInfo m_loacalNetInfo = m_netInfo;
@@ -1616,6 +1627,14 @@ namespace AdvancedRoadTools.Tools
             float partALength = BezierDistance(partA, 0, 1);
             float partRoundLength = 16f * (float)Math.PI * (float)radius * ((float)angle / 360f);
             float partELength = BezierDistance(partE, 0, 1);
+
+            //remove too short segment.
+            if (partALength < 24)
+                partANum = -1;
+
+            if (partELength < 24)
+                partENum = -1;
+
             if (OptionUI.isSmoothMode)
             {
                 m_elevation = 0;
@@ -1646,11 +1665,11 @@ namespace AdvancedRoadTools.Tools
 
                         if (i == 0)
                         {
-                            var tmpElevationMin = 0f;
-                            var tmpElevationMax = 0f;
                             var startDir = VectorUtils.NormalizeXZ(m_pos1 - m_pos0);
                             if (!OptionUI.isSmoothMode)
                             {
+                                float tmpElevationMin;
+                                float tmpElevationMax;
                                 if (Singleton<NetManager>.instance.m_nodes.m_buffer[m_node1].m_flags.IsFlagSet(NetNode.Flags.Underground))
                                 {
                                     tmpElevationMin = (-Singleton<NetManager>.instance.m_nodes.m_buffer[m_node1].m_elevation > m_elevation) ? m_elevation : -Singleton<NetManager>.instance.m_nodes.m_buffer[m_node1].m_elevation;
@@ -1711,8 +1730,8 @@ namespace AdvancedRoadTools.Tools
             {
                 float p1 = (float)(i + 1) / (float)(partRoundNum + 1);
                 float p2 = (float)(i) / (float)(partRoundNum + 1);
-                GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(p1 * 255f), out Vector3 nodePos, out Vector3 nodeDir, true, out angle);
-                GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(p2 * 255f), out Vector3 preNodePos, out Vector3 preNodeDir, true, out angle);
+                GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(p1 * 255f), out Vector3 nodePos, out Vector3 nodeDir, true, out _);
+                GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(p2 * 255f), out Vector3 preNodePos, out Vector3 preNodeDir, true, out _);
                 if (!onlyShow)
                 {
                     if (!OptionUI.isSmoothMode)
@@ -1726,12 +1745,29 @@ namespace AdvancedRoadTools.Tools
                         var position = new Vector3(nodePos.x, height, nodePos.z);
                         CreateNodeDontFollowTerrain(out node[i + partANum + 1], ref rand, netInfo, position);
                     }
-                    if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], preNodeDir, -nodeDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
-                        Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+
+                    if (partANum < 0)
+                    {
+                        if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, node[i + partANum], node[i + partANum + 1], preNodeDir, -nodeDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                    }
+                    else
+                    {
+                        if (Singleton<NetManager>.instance.CreateSegment(out segment[i + partANum + 1], ref rand, netInfo, m_node1, node[i + partANum + 1], preNodeDir, -nodeDir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
+                    }
                 }
                 else
                 {
-                    currentMoney += netInfo.m_netAI.GetConstructionCost(preNodePos, nodePos, m_elevation, m_elevation);
+                    if ((partANum < 0) && (i == 0))
+                    {
+                        GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(255f / (partRoundNum + 1f)), out Vector3 nodePos1, out _, true, out _);
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(m_pos1, nodePos1, m_elevation, m_elevation);
+                    }
+                    else
+                    {
+                        currentMoney += netInfo.m_netAI.GetConstructionCost(preNodePos, nodePos, m_elevation, m_elevation);
+                    }
                 }
             }
 
@@ -1766,12 +1802,21 @@ namespace AdvancedRoadTools.Tools
 
             if (!onlyShow)
             {
-                ushort segmentId;
-                float tmp = (float)partENum / (float)(partENum + 1);
-                var tmpElevationMin = 0f;
-                var tmpElevationMax = 0f;
+                Vector3 dir;
+                if (partENum > 0)
+                {
+                    dir = VectorUtils.NormalizeXZ(partE.Tangent((float)partENum / (float)(partENum + 1)));
+                }
+                else
+                {
+                    dir = VectorUtils.NormalizeXZ(partE.Tangent((float)partRoundNum / (float)(partRoundNum + 1)));
+                }
+
+
                 if (!OptionUI.isSmoothMode)
                 {
+                    float tmpElevationMin;
+                    float tmpElevationMax;
                     if (Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_flags.IsFlagSet(NetNode.Flags.Underground))
                     {
                         tmpElevationMin = (-Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation > m_elevation) ? m_elevation : -Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation;
@@ -1787,30 +1832,38 @@ namespace AdvancedRoadTools.Tools
                     {
                         if (Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_position.y < Singleton<NetManager>.instance.m_nodes.m_buffer[node[partANum + partRoundNum + partENum + 1]].m_position.y)
                         {
-                            if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, tmpNetInfo, m_node2, node[partANum + partRoundNum + partENum + 1], -VectorUtils.NormalizeXZ(endirFix), VectorUtils.NormalizeXZ(partE.Tangent(tmp)), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, true))
+                            if (Singleton<NetManager>.instance.CreateSegment(out _, ref rand, tmpNetInfo, m_node2, node[partANum + partRoundNum + partENum + 1], -VectorUtils.NormalizeXZ(endirFix), dir, Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, true))
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                         else
                         {
-                            if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, tmpNetInfo, node[partANum + partRoundNum + partENum + 1], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                            if (Singleton<NetManager>.instance.CreateSegment(out _, ref rand, tmpNetInfo, node[partANum + partRoundNum + partENum + 1], m_node2, dir, -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                                 Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                         }
                     }
                     else
                     {
-                        if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, tmpNetInfo, node[partANum + partRoundNum + partENum + 1], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                        if (Singleton<NetManager>.instance.CreateSegment(out _, ref rand, tmpNetInfo, node[partANum + partRoundNum + partENum + 1], m_node2, dir, -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                             Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                     }
                 }
                 else
                 {
-                    if (Singleton<NetManager>.instance.CreateSegment(out segmentId, ref rand, netInfo, node[partANum + partRoundNum + partENum + 1], m_node2, VectorUtils.NormalizeXZ(partE.Tangent(tmp)), -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
+                    if (Singleton<NetManager>.instance.CreateSegment(out _, ref rand, netInfo, node[partANum + partRoundNum + partENum + 1], m_node2, dir, -VectorUtils.NormalizeXZ(endirFix), Singleton<SimulationManager>.instance.m_currentBuildIndex, Singleton<SimulationManager>.instance.m_currentBuildIndex, false))
                         Singleton<SimulationManager>.instance.m_currentBuildIndex += 2u;
                 }
             }
             else
             {
-                currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+                if (partENum > 0)
+                {
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(partE.Position((float)partENum / (float)(partENum + 1)), m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+                }
+                else
+                {
+                    GetRoundCurve(NodeA1, RoundCenter, NodeA2, (byte)(((float)partRoundNum / (float)(partRoundNum + 1)) * 255f), out Vector3 nodePos, out Vector3 nodeDir, true, out _);
+                    currentMoney += netInfo.m_netAI.GetConstructionCost(nodePos, m_pos2, m_elevation, Singleton<NetManager>.instance.m_nodes.m_buffer[m_node2].m_elevation);
+                }
             }
 
             if (onlyShow && !onlyShowMesh && !OptionUI.dontUseShaderPreview)
