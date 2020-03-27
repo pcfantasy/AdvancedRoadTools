@@ -34,4 +34,4 @@ CurrentRoadWidth	현재 도로 폭 =
 TRYOPTION	모드 옵션의 "도로 건설시 돈 사용함"을 변경하십시오
 NOSHADERPREVIEW	쉐이터 프리뷰 사용 안함(CSUR 도로 모드 사용시 체크)
 RoadLength	도로 길이 = 
-NODEGAP	Road node gap
+NODEGAP	도로 노드 간격
