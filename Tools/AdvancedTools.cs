@@ -412,7 +412,7 @@ namespace AdvancedRoadTools.Tools
                 if (OptionsKeymappingRoadTool.m_add.IsPressed(e))
                 {
                     if (rampMode == 0 || rampMode == 2)
-                        radius = Clamp(radius + 0.5f, 4, 250);
+                        radius = Clamp(radius + 0.5f, 2, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth + 2, 0, 32);
                     else if (m_step == 2)
@@ -421,7 +421,7 @@ namespace AdvancedRoadTools.Tools
                 if (OptionsKeymappingRoadTool.m_minus.IsPressed(e))
                 {
                     if (rampMode == 0 || rampMode == 2)
-                        radius = Clamp(radius - 0.5f, 4, 250);
+                        radius = Clamp(radius - 0.5f, 2, 250);
                     else if (m_step == 1)
                         leftAddWidth = (byte)COMath.Clamp(leftAddWidth - 2, 0, 32);
                     else if (m_step == 2)
