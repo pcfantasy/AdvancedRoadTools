@@ -11,12 +11,12 @@ Height	높이 =
 ConstructionFee	필요한 건설 비용 = 
 STEP0	시작할 노드 클릭
 STEP0ERROR	이 노드는 가능합니다
-3ROUNDSTEP1	둥근 도로 반경 조절 후 클릭 / 반경 조절 = 
+3ROUNDSTEP2	둥근 도로 반경 조절 후 클릭 / 반경 조절 = 
 YROADSTEP1	결정후 클릭 / 추가할 좌측 도로 폭 = 
 RightAddedWidth	추가할 우측 도로 폭 = 
 1ROUNDSTEP1	건설을 시작할 노드 클릭
 NOMONEY	건설 비용 부족함
-3ROUNDSTEP2	연결을 마칠 노드 클릭.
+3ROUNDSTEP1	연결을 마칠 노드 클릭.
 YROADSTEP2Single	좌측 도로 폭 선택후 클릭.
 YROADSTEP2Dual	매인 도로 폭 선택후 클릭.
 1ROUNDSTEP2	연결을 마칠 노드 클릭.

@@ -11,12 +11,12 @@ Height	高度 =
 ConstructionFee	需要的修建费用 = 
 STEP0	请选择一个起始NODE
 STEP0ERROR	这个NODE不可用
-3ROUNDSTEP1	请选择圆心并调整半径 = 
+3ROUNDSTEP2	请选择圆心并调整半径 = 
 YROADSTEP1	请选择左侧增加的宽度 = 
 RightAddedWidth	右侧增加的宽度 = 
 1ROUNDSTEP1	请选择起始NODE后面的NODE用于确定方向
 NOMONEY	没足够的钱
-3ROUNDSTEP2	请选择结束的NODE
+3ROUNDSTEP1	请选择结束的NODE
 YROADSTEP2Single	请选择左侧道路宽度.
 YROADSTEP2Dual	请选择中间道路宽度.
 1ROUNDSTEP2	请选择结束的NODE.

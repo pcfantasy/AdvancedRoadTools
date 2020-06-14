@@ -11,12 +11,12 @@ Height	Höhe =
 ConstructionFee	Benötigte Konstruktionskosten = 
 STEP0	Wähle einen Netzknotenpunkt zum starten aus
 STEP0ERROR	Dieser Netzknotenpunkt ist verfügbar
-3ROUNDSTEP1	Wähle eine Kreismitte und passe den Radius an = 
+3ROUNDSTEP2	Wähle eine Kreismitte und passe den Radius an = 
 YROADSTEP1	Wähle die nach links hinzugefügte Breite aus = 
 RightAddedWidth	Nach rechts hinzugefügte Breite  = 
 1ROUNDSTEP1	Wähle den nächsten Netzknotenpunkt für die Startrichtung aus
 NOMONEY	Du hast nicht genug Geld
-3ROUNDSTEP2	Wähle einen Endnetzknotenpunkt aus.
+3ROUNDSTEP1	Wähle einen Endnetzknotenpunkt aus.
 YROADSTEP2Single	Wähle die linke Straßenbreite aus.
 YROADSTEP2Dual	Wähle die mittige Straßenbreite aus.
 1ROUNDSTEP2	Wähle einen Endnetzknotenpunkt aus.

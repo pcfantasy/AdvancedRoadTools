@@ -11,12 +11,12 @@ Height	Hauteur =
 ConstructionFee	Coûts de construction requis = 
 STEP0	Sélectionnez un nœud de réseau pour démarrer
 STEP0ERROR	Ce nœud de réseau est disponible
-3ROUNDSTEP1	Choisissez un centre de cercle et ajustez le rayon = 
+3ROUNDSTEP2	Choisissez un centre de cercle et ajustez le rayon = 
 YROADSTEP1	Sélectionnez la largeur ajoutée à gauche = 
 RightAddedWidth	Largeur ajoutée à droite  = 
 1ROUNDSTEP1	Sélectionnez le prochain nœud de réseau pour la direction de départ
 NOMONEY	Vous n'avez pas assez d'argent
-3ROUNDSTEP2	Sélectionnez un nœud de réseau final.
+3ROUNDSTEP1	Sélectionnez un nœud de réseau final.
 YROADSTEP2Single	Sélectionnez la largeur de route gauche.
 YROADSTEP2Dual	Sélectionnez la largeur de rue centrale.
 1ROUNDSTEP2	Sélectionnez un nœud de réseau final.
