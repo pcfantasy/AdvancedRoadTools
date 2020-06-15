@@ -137,7 +137,7 @@ namespace AdvancedRoadTools.Tools
             {
                 if (updateRoundMode)
                 {
-                    storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                    storedPos2[hoveredRoundIndex] = output.m_hitPos;
                     storedElevation[hoveredRoundIndex] = height;
                     storedRadius[hoveredRoundIndex] = radius;
 
@@ -147,7 +147,7 @@ namespace AdvancedRoadTools.Tools
                         {
                             if (Input.GetMouseButtonUp(0))
                             {
-                                storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                                storedPos2[hoveredRoundIndex] = output.m_hitPos;
                                 storedElevation[hoveredRoundIndex] = height;
                                 storedRadius[hoveredRoundIndex] = radius;
                                 updateRoundMode = updateRoundMode ? false : true;
@@ -165,7 +165,7 @@ namespace AdvancedRoadTools.Tools
                         {
                             if (storedRampMode[i] == 0)
                             {
-                                if (Vector2.Distance(VectorUtils.XZ(output.m_hitPos), VectorUtils.XZ(storedPos1[i])) < 4f)
+                                if (Vector2.Distance(VectorUtils.XZ(output.m_hitPos), VectorUtils.XZ(storedPos2[i])) < 4f)
                                 {
                                     hoveredRoundIndex = (byte)i;
                                 }
@@ -178,7 +178,7 @@ namespace AdvancedRoadTools.Tools
                         {
                             if (Input.GetMouseButtonUp(0))
                             {
-                                storedPos1[hoveredRoundIndex] = output.m_hitPos;
+                                storedPos2[hoveredRoundIndex] = output.m_hitPos;
                                 storedElevation[hoveredRoundIndex] = height;
                                 storedRadius[hoveredRoundIndex] = radius;
                                 updateRoundMode = updateRoundMode ? false : true;
@@ -467,7 +467,7 @@ namespace AdvancedRoadTools.Tools
                 }
                 if (OptionsKeymappingRoadTool.m_laterBuild.IsPressed(e))
                 {
-                    if (!updateRoundMode && (rampMode != 1) && (rampMode != 3))
+                    if (!updateRoundMode && (rampMode != 1))
                     {
                         if ((storedNum < 8) || (storedNum == 255))
                         {
@@ -502,7 +502,7 @@ namespace AdvancedRoadTools.Tools
 
                 if (OptionsKeymappingRoadTool.m_build.IsPressed(e))
                 {
-                    if (!updateRoundMode && (rampMode != 1) && (rampMode != 3))
+                    if (!updateRoundMode && (rampMode != 1))
                     {
                         FieldInfo cashAmount;
                         cashAmount = typeof(EconomyManager).GetField("m_cashAmount", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -668,11 +668,11 @@ namespace AdvancedRoadTools.Tools
                         {
                             if (hoveredRoundIndex == (byte)i)
                             {
-                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(10, 70, 0, 90), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(10, 70, 0, 90), storedPos2[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
                             }
                             else
                             {
-                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(45, 126, 0, 214), storedPos1[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
+                                Singleton<RenderManager>.instance.OverlayEffect.DrawCircle(cameraInfo, new Color32(45, 126, 0, 214), storedPos2[i], 16f, -1f, 1280f, renderLimits: false, alphaBlend: true);
                             }
                         }
                     }
